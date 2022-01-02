@@ -1,0 +1,115 @@
+@import "~bootstrap";
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import url('https://fonts.googleapis.com/css2?family=Prata&display=swap');
+
+@import "base/base";
+
+@import "helpers/helpers";
+
+@import "themes/themes";
+
+@import "layout/layout";
+
+@import "components/components";
+
+@import "entities/entities";
+
+
+/*#################### DESKTOP CONTENTS ####################*/
+
+@media (min-width: 990px) {
+    .auth {
+        margin-top: 150px;
+    }
+}
+
+.comment-form textarea {
+    height: 2rem;
+    word-wrap: break-word;
+    overflow:hidden;
+    resize: none;
+}
+
+.comment-section {
+    max-width: 800px;
+
+}
+
+.comment-section .comment-section-text {
+    border: 1px solid #ED7458;
+    padding-top: 10px;
+    background-color: rgba(237, 116, 88, 0.46);
+    border-radius: 3px;
+    vertical-align: middle;
+}
+
+.comment-section .comment-section-image img {
+    max-width: 100%;
+}
+
+/*########### slider *##########*/
+
+@media (max-width: 767px) {
+    .carousel-inner .carousel-item > div {
+        display: none;
+    }
+    .carousel-inner .carousel-item > div:first-child {
+        display: block;
+    }
+}
+
+.carousel-inner .carousel-item.active,
+.carousel-inner .carousel-item-next,
+.carousel-inner .carousel-item-prev {
+    display: flex;
+}
+
+/* medium and up screens */
+@media (min-width: 768px) {
+
+    .carousel-inner .carousel-item-end.active,
+    .carousel-inner .carousel-item-next {
+        transform: translateX(25%);
+    }
+
+    .carousel-inner .carousel-item-start.active,
+    .carousel-inner .carousel-item-prev {
+        transform: translateX(-25%);
+    }
+}
+
+.carousel-inner .carousel-item-end,
+.carousel-inner .carousel-item-start {
+    transform: translateX(0);
+}
+
+/* custom slider */
+.carousel-inner {
+    height: 215px;
+}
+
+/*#################### FORMS ####################*/
+.trickForm {
+    max-width: 800px;
+}
+
+.trickForm .trickForm-name {
+    max-width: 600px;
+}
+
+.trickForm .trickForm-description {
+    height: 300px;
+}
+
+.trickForm .trickForm-groups {
+    width: 200px;
+}
+
+/*#################### AUTHENTICATIONS PAGES ####################*/
+
+.auth .form-control {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    max-width: 80%;
+}
