@@ -1,0 +1,13 @@
+.home {
+  &-hero {
+    &-image {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("../../images/header-background.jpg");
+    }
+    &.hero {
+      height: 100vh;
+    }
+  }
+  .section-tricks .card {
+    height: 230px;
+  }
+}

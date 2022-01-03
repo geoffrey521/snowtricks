@@ -1,0 +1,37 @@
+.hero {
+  height: 90vh;
+  &-image {
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: 50% 50% !important;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+  }
+  &-text {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: scaleX(-1) translate(10%, -50%);
+    color: white;
+    @include tablet {
+      transform: scaleX(-1) translate(50%, -50%);
+      .catchPhrase {
+        font-size: 2rem;
+      }
+    }
+  }
+  .alter-buttons {
+    position: absolute;
+    top: 140px;
+    left: 10px;
+    transform: scaleX(-1);
+    @include tablet {
+      top: 10px;
+    }
+  }
+  &-btn:hover {
+    color: white;
+  }
+}

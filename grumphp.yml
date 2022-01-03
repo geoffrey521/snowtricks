@@ -7,11 +7,6 @@ grumphp:
     max_workers: 20
   # https://github.com/phpro/grumphp/blob/master/doc/tasks.md
   tasks:
-    clover_coverage:
-      clover_file: ./build/logs/clover.xml
-      level: 70
-      metadata:
-        priority: 1
     git_blacklist:
       keywords:
         - "die\\("
@@ -73,11 +68,6 @@ grumphp:
       run_always: false
       metadata:
         priority: 999
-    shell:
-      scripts:
-        - ['-c', './vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml']
-      metadata:
-        priority: 2
     git_commit_message:
       allow_empty_message: false
       enforce_capitalized_subject: true
@@ -129,11 +119,7 @@ grumphp:
     phpstan:
       tasks:
         - phpstan
-    coverage:
-      tasks:
-        - shell
-        - clover_coverage
-    no-coverage:
+    no-co verage:
       tasks:
         - git_blacklist
         - phpcpd
