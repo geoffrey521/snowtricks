@@ -1,0 +1,10 @@
+parameters:
+  checkGenericClassInNonGenericObjectType: false
+  excludes_analyse:
+    - %currentWorkingDirectory%/var/*
+    - %currentWorkingDirectory%/public/*
+    - %currentWorkingDirectory%/tests/*
+    - %currentWorkingDirectory%/features/*
+    - %currentWorkingDirectory%/src/Features/*
+    - %currentWorkingDirectory%/src/Migrations/*
+    - %currentWorkingDirectory%/src/Resources/*
