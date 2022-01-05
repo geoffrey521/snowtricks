@@ -39,13 +39,12 @@ class Trick
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, orphanRemoval: true)]
     private ArrayCollection $videos;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
-    #[ORM\JoinColumn(nullable: false)]
-    private User $author;
-
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
     private Category $category;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
+    private $author;
 
     public function __construct()
     {
@@ -209,18 +208,6 @@ class Trick
         return $this;
     }
 
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?User $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -229,6 +216,18 @@ class Trick
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }
