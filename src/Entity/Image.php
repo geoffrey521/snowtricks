@@ -20,8 +20,11 @@ class Image
     private string $caption;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'images')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private Trick $trick;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $path;
 
     public function getId(): ?int
     {
@@ -60,6 +63,18 @@ class Image
     public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): self
+    {
+        $this->path = $path;
 
         return $this;
     }
