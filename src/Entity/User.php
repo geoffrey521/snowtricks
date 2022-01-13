@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\traits\EntityTimestampableTrait;
+use App\Model\EntityTimestampableInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,8 +13,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\HasLifecycleCallbacks]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityTimestampableInterface
 {
+    use EntityTimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -27,23 +32,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $firstname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $lastname;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private $createdAt;
-
-    #[ORM\Column(type: 'boolean')]
-    private $isActive;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $confirmToken;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private $confirmedAt;
+    private $verifiedAt;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $resetToken;
@@ -59,6 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Trick::class)]
     private $tricks;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $agreedTermsAt;
 
     public function __construct()
     {
@@ -90,7 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -98,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -179,40 +181,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getAgreedTermsDate(): ?\DateTimeImmutable
-    {
-        return $this->agreedTermsDate;
-    }
-
-    public function setAgreedTermsDate(\DateTimeImmutable $agreedTermsDate): self
-    {
-        $this->agreedTermsDate = $agreedTermsDate;
-
-        return $this;
-    }
-
     public function getIsActive(): ?bool
     {
-        return $this->isActive;
-    }
-
-    public function setIsActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
-
-        return $this;
+        return $this->verifiedAt !== null;
     }
 
     public function getConfirmToken(): ?string
@@ -227,14 +198,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getConfirmedAt(): ?\DateTimeImmutable
+    public function getVerifiedAt(): ?\DateTimeImmutable
     {
-        return $this->confirmedAt;
+        return $this->verifiedAt;
     }
 
-    public function setConfirmedAt(?\DateTimeImmutable $confirmedAt): self
+    public function setVerifiedAt(?\DateTimeImmutable $verifiedAt): self
     {
-        $this->confirmedAt = $confirmedAt;
+        $this->verifiedAt = $verifiedAt;
 
         return $this;
     }
@@ -334,4 +305,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getAgreedTermsAt(): ?\DateTimeImmutable
+    {
+        return $this->agreedTermsAt;
+    }
+
+    public function setAgreedTermsAt(?\DateTimeImmutable $agreedTermsDate): self
+    {
+        $this->agreedTermsAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
 }

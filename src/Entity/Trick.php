@@ -2,14 +2,21 @@
 
 namespace App\Entity;
 
+use App\Entity\traits\EntitySlugTrait;
+use App\Entity\traits\EntityTimestampableTrait;
+use App\Model\EntitySlugInterface;
+use App\Model\EntityTimestampableInterface;
 use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
-class Trick
+class Trick implements EntitySlugInterface, EntityTimestampableInterface
 {
+    use EntitySlugTrait;
+    use EntityTimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -21,30 +28,21 @@ class Trick
     #[ORM\Column(type: 'text')]
     private string $description;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
-
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $updatedAt;
-
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
-    private string $slug;
-
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
-    private ArrayCollection $comments;
+    private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class, orphanRemoval: true)]
-    private ArrayCollection $images;
+    private Collection $images;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, orphanRemoval: true)]
-    private ArrayCollection $videos;
+    private Collection $videos;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
     private Category $category;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
-    private $author;
+    private User $author;
 
     public function __construct()
     {
@@ -78,42 +76,6 @@ class Trick
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
 
         return $this;
     }
@@ -230,5 +192,10 @@ class Trick
         $this->author = $author;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

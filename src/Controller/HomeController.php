@@ -2,20 +2,27 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
+use App\Repository\ImageRepository;
 use App\Repository\TrickRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(TrickRepository $repository): Response
+    public function index(Request $request, TrickRepository $trickRepository): Response
     {
-        $tricks = $repository->findBy([], ['createdAt' => 'DESC'], 15, 0);
+        $limit = $request->query->getInt('limit', 15);
+        $tricks = $trickRepository->findBy([], ['createdAt' => 'DESC'], $limit);
 
         return $this->render('home/index.html.twig', [
-            'tricks' => $tricks
+            'tricks' => $tricks,
+            'limit' => $limit + 15
         ]);
     }
+
 }
