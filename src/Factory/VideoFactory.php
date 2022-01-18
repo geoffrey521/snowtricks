@@ -39,7 +39,7 @@ final class VideoFactory extends ModelFactory
     {
         return [
             // TODO add your default values here (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories)
-            'url' => self::faker()->randomElement(['https://www.youtube.com/watch?v=JjOyl6zS-eU', 'https://www.youtube.com/watch?v=JjOyl6zS-eU', 'https://www.youtube.com/watch?v=JjOyl6zS-eU']),
+            'url' => self::faker()->randomElement(['https://www.youtube.com/embed/JjOyl6zS-eU', 'https://www.youtube.com/embed/JjOyl6zS-eU', 'https://www.youtube.com/embed/JjOyl6zS-eU']),
         ];
     }
 

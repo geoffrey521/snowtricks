@@ -1,0 +1,174 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks - {{ trick.name }}{% endblock %}
+
+{% block body %}
+    <!-- Variables -->
+    {% set backgroundImage = trick.images[0] %}
+    {% set author = trick.author.firstname ~ ' ' ~ trick.author.lastname %}
+
+<main class="trickDetails">
+
+    <!-- Hero -->
+    <div class="hero details-hero container">
+        <div class="hero-image"
+             style="background: url({{ asset('build/images/tricks/' ~ backgroundImage.path) }}), linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));">
+            <div class="hero-text">
+                <h1 class="catchPhrase mainTitle">{{ trick.name }}</h1>
+            </div>
+            <div class="alter-buttons">
+                <a href="#" class="d-inline-block btn btn-warning btn-sm"><i
+                            class="fas fa-pencil-alt"></i></a>
+                <a href="#" class="d-inline-block btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+            </div>
+        </div>
+    </div>
+
+        <!-- Tricks section -->
+        <section id="section_tricks" class="section-tricks">
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col text-center desktop-hidden">
+                        <button id="seeMediasBtn" class="seeMedias btn btn-orange">See medias</button>
+                    </div>
+                </div>
+                <!-- Carousel -->
+                <div id="trickMedias" class="row section-tricks-medias mobile-hidden mx-auto my-auto container">
+                    <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="false"
+                         data-bs-interval="false">
+                        <div class="carousel-inner" role="listbox">
+                            {% for image in trick.images %}
+                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                    <div class="col-12 col-sm-6 col-lg-2 mt-3">
+                                        <div class="card">
+                                            <img src="{{ asset('build/images/tricks/' ~ image.path) }}"
+                                                 class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
+                                                 data-bs-target="#media-modal-img-{{ loop.index }}">
+                                            <div class="alter-buttons">
+                                                <a href="#" class="d-inline-block btn btn-warning btn-sm"><i
+                                                            class="fas fa-pencil-alt"></i></a>
+                                                <a href="#" class="d-inline-block btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% for video in trick.videos %}
+                                <div class="carousel-item">
+                                    <div class="col-12 col-sm-6 col-lg-2 mt-3">
+                                        <div class="card">
+                                            <img src="https://img.youtube.com/vi/tgbNymZ7vqY/default.jpg"
+                                                 class="img-fluid" alt="{{ trick.name }} video" data-bs-toggle="modal"
+                                                 data-bs-target="#media-modal-vid-{{ loop.index }}">
+                                            <div class="alter-buttons">
+                                                <a href="#" class="d-inline-block btn btn-warning btn-sm"><i
+                                                            class="fas fa-pencil-alt"></i></a>
+                                                <a href="#" class="d-inline-block btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button"
+                           data-bs-slide="prev">
+                            <span class="carousel carousel-control-prev-icon" aria-hidden="true"></span>
+                        </a>
+                        <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button"
+                           data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+                <!-- end carousel -->
+
+                <!-- modals -->
+                {% for image in trick.images %}
+                    <div class="modal fade" id="media-modal-img-{{ loop.index }}" tabindex="-1"
+                         aria-labelledby="modal-title" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <img src="{{ asset('build/images/tricks/' ~ image.path) }}"
+                                     class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
+                                     data-bs-target="#media-modal-img-{{ loop.index }}">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for video in trick.videos %}
+                    <div class="modal modalCustom fade" id="media-modal-vid-{{ loop.index }}" tabindex="-1"
+                         aria-labelledby="modal-title" aria-hidden="true">
+                        <div class="modal-dialog modalCustom-dialog">
+                            <div class="modal-content modalCustom-content">
+                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <iframe width="100%" src="https://www.youtube.com/embed/tgbNymZ7vqY"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        data-bs-toggle="modal" data-bs-target="#media-modal-vid-{{ loop.index }}">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- end modals -->
+
+                <div class="mt-5">
+                    <p>
+                        {{ trick.description }}
+                    </p>
+                </div>
+                <div class="section-tricks-infos d-flex justify-content-center mb-5 mt-5">
+                    <ul class="list-group list-group-horizontal-md text-center">
+                        <li class="list-group-item">By: {{ author }}</li>
+                        <li class="list-group-item">
+                            {{ trick.createdAt|date('Y/m/d') }}
+                        </li>
+                        <li class="list-group-item">Category: Grab</li>
+                        <li class="list-group-item">
+                            <a href="#viewtrick_comments">
+                                {{ trick.comments|length }} comments
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- end trick section -->
+        <hr/>
+        <!-- leave comment section -->
+        <div class="row container m-auto g-3 align-items-center comment-form d-flex justify-content-center mt-5 mb-5">
+            <div class="col-lg-10 mt-0">
+            <textarea id="inputComment" name="content" class="form-control"
+                      placeholder="Write your comment..."></textarea>
+            </div>
+            <div class="col-lg-2 mt-lg-0 text-center">
+                <input type="submit" class="col-form-label btn btn-orange" value="Leave a comment">
+            </div>
+        </div>
+        <!-- end leave comment section -->
+        <hr/>
+        <!-- trick comments section -->
+        <section id="viewtrick_comments" class="comment-section mt-5 m-auto container">
+            {% for comment in trick.comments|slice(0, limit) %}
+                <div class="row mt-3 w-100">
+                    <div class="col-2 comment-section-image">
+                        {{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}
+                    </div>
+                    <div class="col-10 comment-section-text">
+                        <p>
+                            {{ comment.content }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="row">
+                <div class="col text-center">
+                    <a href="{{ path('trick', {'slug' : trick.slug, 'limit' : limit }) }}#section_tricks"
+                       class="loadMore mt-5 btn btn-orange">Load More</a>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
