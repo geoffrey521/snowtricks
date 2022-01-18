@@ -16,4 +16,10 @@ trait EntitySlugTrait
            $this->slug = (string)$slugger->slug((string)$this)->lower();
        }
     }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
 }

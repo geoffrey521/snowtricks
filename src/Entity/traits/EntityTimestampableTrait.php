@@ -10,7 +10,7 @@ trait EntityTimestampableTrait
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $updatedAt = null;
 
 
     public function setCreatedAt(): self

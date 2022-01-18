@@ -12,3 +12,6 @@ import 'bootstrap';
 
 // start the Stimulus application
 import './bootstrap';
+
+// carousel (need to be load only when is required)
+import './js/carousel';

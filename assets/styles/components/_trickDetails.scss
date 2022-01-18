@@ -1,0 +1,31 @@
+.trickDetails {
+  .hero {
+    height: 75vh;
+  }
+  .carousel-control-next,
+  .carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+  }
+  .carousel-control-prev {
+    left: -100px;
+    @include tablet {
+      left: 0;
+    }
+  }
+  .carousel-control-next {
+    right: -100px;
+    @include tablet {
+      right: 0;
+    }
+  }
+  .carousel-item {
+    &:hover {
+      cursor: pointer;
+    }
+    .alter-buttons {
+      position: absolute;
+      bottom: -40px;
+      right: 10px;
+    }
+  }
+}
