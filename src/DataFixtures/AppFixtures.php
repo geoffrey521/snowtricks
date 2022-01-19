@@ -13,7 +13,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-
     public function load(ObjectManager $manager): void
     {
         // create 5 categories
@@ -25,17 +24,20 @@ class AppFixtures extends Fixture
         //create 1 user admin
         UserFactory::createOne([
             'roles' => ['ROLE_ADMIN'],
+            'username' => 'admin',
+            'email' => 'admin@snowtricks.fr',
         ]);
 
         ImageFactory::createMany(30);
 
-        TrickFactory::createMany(300,
+        TrickFactory::createMany(
+            300,
             [
                 'images' => ImageFactory::new()->many(2, 5),
                 'videos' => VideoFactory::new()->many(2, 5),
                 'author' => UserFactory::randomOrCreate(),
                 'category' => CategoryFactory::randomOrCreate(),
-                'comments' => CommentFactory::new()->many(2, 10)
+                'comments' => CommentFactory::new()->many(2, 10),
             ]
         );
 

@@ -5,7 +5,7 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 
-{% block body %}https://stackoverflow.com/questions/55121454/how-to-get-doctrine-entity-persistent-collection-data-values-with-symfony
+{% block body %}
     <!-- Hero -->
     <div class="hero home-hero">
         <div class="hero-image home-hero-image">
@@ -17,9 +17,14 @@
     </div>
 
     <main class="home">
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
         <!-- Tricks content -->
         <section id="section_tricks" class="section-tricks">
-            <div class="container mt-3">
+            <div class="container mt-3 mb-5">
                 <div class="row">
                     {% for trick in tricks %}
                         {% set image = trick.images[0] %}
@@ -42,8 +47,8 @@
                     {% endfor %}
                 </div>
                 <div class="row">
-                    <div class="col text-center">
-                        <a href="{{ path('home', {'limit' : limit}) }}#section_tricks" class="loadMore mt-5 btn btn-orange">Load More</a>
+                    <div class="col text-center mb-5">
+                        <a href="{{ path('home', {'limit' : limit}) }}#section_tricks" class="loadMore mt-5 mb-5 btn btn-orange">Load More</a>
                     </div>
                 </div>
             </div>
