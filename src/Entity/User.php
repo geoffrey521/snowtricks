@@ -27,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private string $email;
 
     #[ORM\Column(type: 'json')]
+    /**
+     * @var array<string>
+     */
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
@@ -39,28 +42,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private string $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $confirmToken;
+    private string $confirmToken;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private $verifiedAt;
+    private \DateTimeImmutable $verifiedAt;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $resetToken;
+    private string $resetToken;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private $resetAt;
+    private \DateTime $resetAt;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $rememberToken;
+    private string $rememberToken;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class)]
-    private $comments;
+    private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Trick::class)]
-    private $tricks;
+    private Collection $tricks;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private $agreedTermsAt;
+    private \DateTimeImmutable $agreedTermsAt;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $username;
 
     public function __construct()
     {
@@ -92,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -100,7 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
      */
     public function getUsername(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
@@ -115,6 +121,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         return array_unique($roles);
     }
 
+    /**
+     * @param array<string> $roles
+     *
+     * @return self
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -151,7 +162,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -183,7 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
 
     public function getIsActive(): ?bool
     {
-        return $this->verifiedAt !== null;
+        return null !== $this->verifiedAt;
     }
 
     public function getConfirmToken(): ?string
@@ -227,7 +238,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         return $this->resetAt;
     }
 
-    public function setResetAt(?\DateTimeInterface $resetAt): self
+    public function setResetAt(?\DateTime $resetAt): self
     {
         $this->resetAt = $resetAt;
 
@@ -318,4 +329,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         return $this;
     }
 
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
 }
