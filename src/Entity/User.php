@@ -73,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private string $username;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private $isActive;
+    private bool $isActive;
 
     public function __construct()
     {

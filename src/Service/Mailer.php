@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use DateTime;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -9,9 +10,10 @@ use Symfony\Component\Mime\Address;
 class Mailer
 {
     public function __construct(private MailerInterface $mailer)
-    {}
+    {
+    }
 
-    public function sendEmail($recipient, $token)
+    public function sendEmail(string $recipient, string $token): void
     {
         $email = (new TemplatedEmail())
             ->from('register@example.com')
@@ -23,7 +25,7 @@ class Mailer
 
             // pass variables (name => value) to the template
             ->context([
-                'expiration_date' => new \DateTime('+7 days'),
+                'expiration_date' => new DateTime('+7 days'),
                 'token' => $token,
             ])
         ;

@@ -45,7 +45,6 @@ final class UserFactory extends ModelFactory
             'firstname' => self::faker()->firstName,
             'lastname' => self::faker()->lastName,
             'verifiedAt' => self::faker()->dateTimeBetween('-2 months', '-1 month'),
-           // 'verifiedAt' => self::faker()->boolean(70) ? self::faker()->dateTimeBetween('-2 months', '-1 month') : null,
             'agreedTermsAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-3 months', '-2 months')),
         ];
     }
