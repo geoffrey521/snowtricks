@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Service\Mailer;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private UserPasswordHasherInterface $userPasswordHasher, private Mailer $mailer)
+    public function __construct(private UserPasswordHasherInterface $userPasswordHasher, private Mailer $mailer, private UserRepository $userRepository)
     {
     }
 
@@ -65,8 +66,24 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/confirm_account/{token}', name: 'confirm_account')]
-    public function confirmAccount(): void
+    public function confirmAccount($token, EntityManagerInterface $entityManager)
     {
-        //todo
+        $user = $this->userRepository->findOneBy(["confirmToken" => $token]);
+
+        if ($user) {
+            $user->setConfirmToken(null);
+            $user->setIsActive(true);
+            $user->setVerifiedAt(new \DateTime('now'));
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Your account is successfully activated');
+
+            $this->redirectToRoute('home');
+        }
+
+        $this->addFlash('error', 'The followed link is invalid');
+        return $this->redirectToRoute('home');
     }
 }
