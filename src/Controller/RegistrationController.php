@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use DateTime;
 
 class RegistrationController extends AbstractController
 {
@@ -68,7 +68,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/confirm_account/{token}', name: 'confirm_account')]
-    public function confirmAccount($token, EntityManagerInterface $entityManager): Response
+    public function confirmAccount(string $token, EntityManagerInterface $entityManager): Response
     {
         $user = $this->userRepository->findOneBy(['confirmToken' => $token]);
 
