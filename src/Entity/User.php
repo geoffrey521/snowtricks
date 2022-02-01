@@ -48,8 +48,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $confirmToken;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $verifiedAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private \DateTime $verifiedAt;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $resetToken;
@@ -71,6 +71,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $username;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $isActive;
 
     public function __construct()
     {
@@ -196,10 +199,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         return $this;
     }
 
-    public function getIsActive(): ?bool
+    /*public function getIsActive(): ?bool
     {
         return null !== $this->verifiedAt;
-    }
+    }*/
 
     public function getConfirmToken(): ?string
     {
@@ -213,12 +216,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         return $this;
     }
 
-    public function getVerifiedAt(): ?\DateTimeImmutable
+    public function getVerifiedAt(): ?\DateTime
     {
         return $this->verifiedAt;
     }
 
-    public function setVerifiedAt(?\DateTimeImmutable $verifiedAt): self
+    public function setVerifiedAt(?\DateTime $verifiedAt): self
     {
         $this->verifiedAt = $verifiedAt;
 
@@ -326,9 +329,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         return $this->agreedTermsAt;
     }
 
-    public function setAgreedTermsAt(): self
+    public function setAgreedTermsAt(\DateTimeImmutable $agreedTermsAt): self
     {
-        $this->agreedTermsAt = new \DateTimeImmutable();
+        $this->agreedTermsAt = $agreedTermsAt;
 
         return $this;
     }
@@ -336,6 +339,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(?bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

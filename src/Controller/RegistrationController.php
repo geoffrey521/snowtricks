@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,18 +14,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
+
+    public function __construct(private UserPasswordHasherInterface $userPasswordHasher, private Mailer $mailer)
+    {
+    }
+
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setAgreedTermsAt();
+            $user->setAgreedTermsAt(new \DateTimeImmutable());
+            $user->setIsActive(false);
+            $user->setConfirmToken($this->generateToken());
+
             // encode the plain password
             $user->setPassword(
-                $userPasswordHasher->hashPassword(
+                $this->userPasswordHasher->hashPassword(
                 $user,
                 $form->get('plainPassword')->getData()
             )
@@ -33,6 +42,8 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
+            $this->mailer->sendEmail($user->getEmail(), $user->getConfirmToken());
+
 
             return $this->redirectToRoute('home');
         }
@@ -40,5 +51,21 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function generateToken(): string
+    {
+        $bytes = random_bytes(30);
+        return (bin2hex($bytes));
+    }
+
+    #[Route('/confirm_account/{token}', name: 'confirm_account')]
+    public function confirmAccount()
+    {
+        //todo
     }
 }
