@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use DateTime;
 
 class RegistrationController extends AbstractController
 {
@@ -44,6 +45,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
             $this->mailer->sendEmail($user->getEmail(), $user->getConfirmToken());
+            $this->addFlash('success', 'Account successfully created, please check your emails for activation');
 
             return $this->redirectToRoute('home');
         }
@@ -66,24 +68,25 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/confirm_account/{token}', name: 'confirm_account')]
-    public function confirmAccount($token, EntityManagerInterface $entityManager)
+    public function confirmAccount($token, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->userRepository->findOneBy(["confirmToken" => $token]);
+        $user = $this->userRepository->findOneBy(['confirmToken' => $token]);
 
         if ($user) {
             $user->setConfirmToken(null);
             $user->setIsActive(true);
-            $user->setVerifiedAt(new \DateTime('now'));
+            $user->setVerifiedAt(new DateTime('now'));
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             $this->addFlash('success', 'Your account is successfully activated');
 
-            $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
 
         $this->addFlash('error', 'The followed link is invalid');
+
         return $this->redirectToRoute('home');
     }
 }
