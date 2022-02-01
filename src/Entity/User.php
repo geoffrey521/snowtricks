@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private string $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $confirmToken;
+    private ?string $confirmToken;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private \DateTime $verifiedAt;

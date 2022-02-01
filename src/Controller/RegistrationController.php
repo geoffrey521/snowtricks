@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Service\Mailer;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private UserPasswordHasherInterface $userPasswordHasher, private Mailer $mailer)
+    public function __construct(private UserPasswordHasherInterface $userPasswordHasher, private Mailer $mailer, private UserRepository $userRepository)
     {
     }
 
@@ -43,6 +45,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
             $this->mailer->sendEmail($user->getEmail(), $user->getConfirmToken());
+            $this->addFlash('success', 'Account successfully created, please check your emails for activation');
 
             return $this->redirectToRoute('home');
         }
@@ -65,8 +68,25 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/confirm_account/{token}', name: 'confirm_account')]
-    public function confirmAccount(): void
+    public function confirmAccount(string $token, EntityManagerInterface $entityManager): Response
     {
-        //todo
+        $user = $this->userRepository->findOneBy(['confirmToken' => $token]);
+
+        if ($user) {
+            $user->setConfirmToken(null);
+            $user->setIsActive(true);
+            $user->setVerifiedAt(new DateTime('now'));
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Your account is successfully activated');
+
+            return $this->redirectToRoute('home');
+        }
+
+        $this->addFlash('error', 'The followed link is invalid');
+
+        return $this->redirectToRoute('home');
     }
 }
