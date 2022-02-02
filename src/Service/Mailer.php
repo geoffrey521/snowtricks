@@ -13,20 +13,20 @@ class Mailer
     {
     }
 
-    public function sendEmail(string $template, string $recipient, string $subject, array $options = [], string $expired = '+7 days'): void
+    public function sendEmail(string $recipient, string $token): void
     {
         $email = (new TemplatedEmail())
-            ->from('mailbot@example.com')
+            ->from('register@example.com')
             ->to(new Address($recipient))
-            ->subject($subject)
+            ->subject('Validate your account')
 
             // path of the Twig template to render
-            ->htmlTemplate('emails/'.$template.'.html.twig')
+            ->htmlTemplate('emails/registration.html.twig')
 
             // pass variables (name => value) to the template
             ->context([
-                'expiration_date' => new DateTime($expired),
-                'options' => $options,
+                'expiration_date' => new DateTime('+7 days'),
+                'token' => $token,
             ])
         ;
         $this->mailer->send($email);

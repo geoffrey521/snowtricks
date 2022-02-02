@@ -44,7 +44,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
-            $this->mailer->sendEmail('registration', $user->getEmail(), 'Validate your account', ['token' => $user->getConfirmToken()]);
+            $this->mailer->sendEmail($user->getEmail(), $user->getConfirmToken());
             $this->addFlash('success', 'Account successfully created, please check your emails for activation');
 
             return $this->redirectToRoute('home');
