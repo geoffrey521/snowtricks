@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Trick{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('delete_trick_images') }}
+{% endblock %}
+
+{% block body %}
+    <main class="mt-main container">
+
+
+    <h1>Edit Trick</h1>
+
+    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('trick_index') }}">back to list</a>
+
+    {{ include('trick/_delete_form.html.twig') }}
+    </main>
+{% endblock %}

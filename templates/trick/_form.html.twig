@@ -1,0 +1,28 @@
+{{ form_start(form) }}
+<hr>
+
+{#{{ form_widget(form) }}#}
+{{ form_row(form.name) }}
+{{ form_widget(form.category) }}
+{{ form_widget(form.description) }}
+{{ form_widget(form.images) }}
+{{ form_widget(form.videos) }}
+
+<button id="add_image">Add image</button>
+<button id="add_video">Add video</button>
+
+{# check if route is "trick_edit" #}
+{% if app.request.attributes.get('_route') == 'trick_edit' %}
+    <h2>Images</h2>
+    {% for image in trick.images %}
+        <div>
+            <img src="{{ asset('build/images/tricks/' ~ image.title) }}" alt="{{ image.caption }}" width="150">
+            <a href="{{ path('trick_delete_image', {id: image.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id) }}">
+                Delete
+            </a>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

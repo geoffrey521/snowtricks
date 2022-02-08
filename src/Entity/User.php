@@ -40,10 +40,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private string $password;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $firstname;
+    private ?string $firstname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $lastname;
+    private ?string $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $confirmToken;
@@ -113,7 +113,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -353,5 +353,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         $this->isActive = $isActive;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->username;
     }
 }

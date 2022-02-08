@@ -37,3 +37,6 @@ dump.sql
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> Ignore upload files ###
+/assets/images/tricks

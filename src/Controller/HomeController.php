@@ -18,6 +18,9 @@ class HomeController extends AbstractController
     {
         $limit = $request->query->getInt('limit', 15);
         $tricks = $trickRepository->findBy([], ['createdAt' => 'DESC'], $limit);
+//        foreach ($tricks as $trick) {
+//            dd($trick->getImages()[0]);
+//        }
 
         return $this->render('home/index.html.twig', [
             'tricks' => $tricks,
