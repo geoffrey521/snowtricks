@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Trick{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var fileCount = '{{ form.images|length }}';
+    </script>
+    {{ encore_entry_script_tags('add_trick_images') }}
+    {{ encore_entry_script_tags('add_trick_videos') }}
+
+{% endblock %}
+
+{% block body %}
+    <main class="mt-page container trickForm">
+
+        <h1 class="mainTitle">Create new Trick</h1>
+
+        {{ include('trick/_form.html.twig') }}
+
+        <a href="{{ path('trick_index') }}">back to list</a>
+    </main>
+{% endblock %}

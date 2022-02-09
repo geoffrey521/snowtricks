@@ -20,6 +20,14 @@ class Video
     #[ORM\Column(type: 'string', length: 255)]
     private string $url;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private string $thumbnail;
+
+    public function __toString(): string
+    {
+        return $this->url;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +53,18 @@ class Video
     public function setUrl(string $url): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getThumbnail(): ?string
+    {
+        return $this->thumbnail;
+    }
+
+    public function setThumbnail(?string $thumbnail): self
+    {
+        $this->thumbnail = $thumbnail;
 
         return $this;
     }

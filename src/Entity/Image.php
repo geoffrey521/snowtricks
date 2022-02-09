@@ -24,7 +24,12 @@ class Image
     private Trick $trick;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $path;
+    private string $path;
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
 
     public function getId(): ?int
     {
