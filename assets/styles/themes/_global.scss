@@ -21,7 +21,9 @@ body {
     display: none;
   }
 }
-.mt-main {
-  margin-top: 150px;
+.mt-page {
+  @include desktop {
+    margin-top: 130px;
+  }
 }
 

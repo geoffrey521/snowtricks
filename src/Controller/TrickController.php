@@ -23,6 +23,7 @@ class TrickController extends AbstractController
     public function index(TrickRepository $trickRepository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         return $this->render('trick/index.html.twig', [
             'tricks' => $trickRepository->findAll(),
         ]);

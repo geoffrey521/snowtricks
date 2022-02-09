@@ -4,15 +4,17 @@
 
 {% block body %}
     <!-- Variables -->
-    {% set backgroundImage = trick.images.first %}
+{#    {% set backgroundImage = trick.images.first %}#}
+    {% set backgroundImage = (trick.images.first) ? trick.images.first.title : 'snowboard_default.jpg' %}
     {% set author = trick.author.firstname ~ ' ' ~ trick.author.lastname %}
 
-    <main class="trickDetails">
-
+    <main class="trickDetails mt-page">
         <!-- Hero -->
         <div class="hero details-hero container">
             <div class="hero-image"
-                 style="background: url({{ asset('build/images/tricks/' ~ backgroundImage.title) }}), linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));">
+                 style="background: url(
+                 {{ asset('build/images/tricks/' ~ backgroundImage) }}
+                         ), linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));">
                 <div class="hero-text">
                     <h1 class="catchPhrase mainTitle">{{ trick.name }}</h1>
                 </div>
