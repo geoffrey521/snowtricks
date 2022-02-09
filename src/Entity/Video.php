@@ -21,7 +21,12 @@ class Video
     private string $url;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $thumbnail;
+    private string $thumbnail;
+
+    public function __toString(): string
+    {
+        return $this->url;
+    }
 
     public function getId(): ?int
     {
@@ -50,10 +55,6 @@ class Video
         $this->url = $url;
 
         return $this;
-    }
-
-    public function __toString(): string {
-        return $this->url;
     }
 
     public function getThumbnail(): ?string

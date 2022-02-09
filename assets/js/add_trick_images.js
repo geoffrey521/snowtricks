@@ -6,21 +6,19 @@ function createAddFile(fileCount)
     var newWidget = $("#trick_images").attr('data-prototype');
     // replace the "__name__" used in the id and name of the prototype
     newWidget = newWidget.replace(/__name__/g, fileCount);
-
     $("#trick_images").append(newWidget);
 
-    // Once the file is added
-    $('#trick_images___name__' + fileCount).on('change', function() {
-        // Create another instance of add file button and company
-        createAddFile(parseInt(fileCount)+1);
-    });
+    let newLabel = document.getElementById(`trick_images_${fileCount}`).labels[0];
+    newLabel.innerText = `image ${fileCount}`;
+    newLabel.classList.add('d-none');
 }
 
 $(document).ready(function(e){
+    let fileCount = 1;
     $('#add_image').on('click', function (e) {
         e.preventDefault();
-        createAddFile(parseInt(fileCount)+1);
+        fileCount++;
+        createAddFile(fileCount);
     });
     createAddFile(fileCount);
-    fileCount++;
 });

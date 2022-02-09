@@ -81,6 +81,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         $this->tricks = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->username;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -353,10 +358,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         $this->isActive = $isActive;
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->username;
     }
 }

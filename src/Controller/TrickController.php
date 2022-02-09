@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Image;
 use App\Entity\Trick;
-use App\Entity\User;
 use App\Entity\Video;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
@@ -29,7 +28,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/new', name: 'trick_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         $trick = new Trick();
 
@@ -38,10 +37,10 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             // getting images and videos transmitted by form
             $images = $form->get('images')->getData();
             $videos = $form->get('videos')->getData();
+            $author = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
 
             // loop each images
             foreach ($images as $image) {
@@ -72,12 +71,15 @@ class TrickController extends AbstractController
                 $video = new Video();
 
                 $videoDatas = $this->formatVideoDatasFromUrl($url);
-                $video->setUrl($videoDatas['url']);
-                $video->setThumbnail($videoDatas['thumbnail']);
+                if ($videoDatas) {
+                    $video->setUrl($videoDatas['url']);
+                    $video->setThumbnail($videoDatas['thumbnail']);
 
-                $trick->addVideo($video);
+                    $trick->addVideo($video);
+                }
             }
-            $trick->setAuthor($this->getUser());
+
+            $trick->setAuthor($author);
             $entityManager->persist($trick);
             $entityManager->flush();
 
@@ -91,14 +93,14 @@ class TrickController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'trick_show')]
-    public function show(Request $request, TrickRepository $trickRepository, $slug): Response
+    public function show(Request $request, TrickRepository $trickRepository, string $slug): Response
     {
         $trick = $trickRepository->findOneBySlug($slug);
         $limit = $request->query->getInt('limit');
 
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
-            'limit' => $limit + 4
+            'limit' => $limit + 4,
         ]);
     }
 
@@ -139,8 +141,6 @@ class TrickController extends AbstractController
             $trick->setAuthor($this->getUser());
             $entityManager->persist($trick);
 
-
-
             $entityManager->flush();
 
             return $this->redirectToRoute('trick_index', [], Response::HTTP_SEE_OTHER);
@@ -164,7 +164,8 @@ class TrickController extends AbstractController
     }
 
     #[Route('/delete/image/{id}', name: 'trick_delete_image', methods: 'DELETE')]
-    public function deleteImage(Image $image, Request $request, EntityManagerInterface $entityManager) {
+    public function deleteImage(Image $image, Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
         $data = json_decode($request->getContent(), true);
 
         // check if token is valid
@@ -179,6 +180,7 @@ class TrickController extends AbstractController
             // Json response
             return new JsonResponse(['success' => 1]);
         }
+
         return new JsonResponse(['error' => 'Invalid token'], 400);
     }
 
@@ -192,13 +194,14 @@ class TrickController extends AbstractController
             if ($isYoutube) {
                 $videoDatas['url'] = str_replace('watch?v=', 'embed/', $url);
                 $separatedLinkElements = explode('/', $videoDatas['url']);
-                $videoDatas['thumbnail'] = "https://img.youtube.com/vi/".end($separatedLinkElements)."/0.jpg";
+                $videoDatas['thumbnail'] = 'https://img.youtube.com/vi/'.end($separatedLinkElements).'/0.jpg';
             }
             if ($isDailymotion) {
                 $videoDatas['url'] = str_replace('video', 'embed/video', $url);
                 $separatedLinkElements = explode('/', $videoDatas['url']);
-                $videoDatas['thumbnail'] = "https://www.dailymotion.com/thumbnail/video/".end($separatedLinkElements);
+                $videoDatas['thumbnail'] = 'https://www.dailymotion.com/thumbnail/video/'.end($separatedLinkElements);
             }
+
             return $videoDatas;
         }
         return false;
