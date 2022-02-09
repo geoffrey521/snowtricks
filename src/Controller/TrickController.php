@@ -22,6 +22,7 @@ class TrickController extends AbstractController
     #[Route('/', name: 'trick_index', methods: ['GET'])]
     public function index(TrickRepository $trickRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('trick/index.html.twig', [
             'tricks' => $trickRepository->findAll(),
         ]);
@@ -30,6 +31,8 @@ class TrickController extends AbstractController
     #[Route('/new', name: 'trick_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $trick = new Trick();
 
         $form = $this->createForm(TrickType::class, $trick);
@@ -155,6 +158,7 @@ class TrickController extends AbstractController
     #[Route('/{id}', name: 'trick_delete', methods: ['POST'])]
     public function delete(Request $request, Trick $trick, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
             $entityManager->remove($trick);
             $entityManager->flush();
@@ -166,6 +170,7 @@ class TrickController extends AbstractController
     #[Route('/delete/image/{id}', name: 'trick_delete_image', methods: 'DELETE')]
     public function deleteImage(Image $image, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $data = json_decode($request->getContent(), true);
 
         // check if token is valid
@@ -204,6 +209,7 @@ class TrickController extends AbstractController
 
             return $videoDatas;
         }
+
         return false;
     }
 }
