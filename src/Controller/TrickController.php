@@ -51,7 +51,7 @@ class TrickController extends AbstractController
                 // on récupère le nom original du fichier
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $image;
-                if ($uploadedFile) {
+                if ($uploadedFile != null) {
                     $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
                     // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
                     $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
@@ -126,7 +126,7 @@ class TrickController extends AbstractController
                 // on récupère le nom original du fichier
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $image;
-                if ($uploadedFile) {
+                if ($uploadedFile != null) {
                     $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
                     // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
                     $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
@@ -203,7 +203,6 @@ class TrickController extends AbstractController
 
         // check if token is valid
         if ($this->isCsrfTokenValid('delete'.$video->getId(), $data['_token'])) {
-
             // Delete video in database
             $entityManager->remove($video);
             $entityManager->flush();
