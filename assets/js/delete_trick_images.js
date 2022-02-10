@@ -7,7 +7,7 @@ window.onload = () => {
         link.addEventListener("click", function(e) {
             e.preventDefault();
             // ask user validation
-            if(confirm("Do you want to delete this image?")){
+            if(confirm("Do you want to delete this media?")){
                 // Send ajax request to the link with DELETE method
                 fetch(this.getAttribute("href"), {
                     method: "DELETE",

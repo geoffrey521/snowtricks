@@ -4,9 +4,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        var fileCount = '{{ form.images|length }}';
-    </script>
     {{ encore_entry_script_tags('add_trick_images') }}
     {{ encore_entry_script_tags('add_trick_videos') }}
 

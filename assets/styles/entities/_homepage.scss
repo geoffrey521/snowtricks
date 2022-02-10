@@ -7,7 +7,20 @@
       height: 100vh;
     }
   }
-  .section-tricks .card {
-    height: 230px;
+  .section-tricks{
+    .card {
+      height: 230px;
+    }
   }
+  &-trickList {
+    &-text {
+      .card-title {
+        font-size: 1rem;
+      }
+      .card-link {
+        max-width: 65%;
+      }
+    }
+  }
+
 }

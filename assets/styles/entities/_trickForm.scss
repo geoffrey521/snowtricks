@@ -1,5 +1,6 @@
 .trickForm {
-  .mainTitle {
+  .mainTitle{
+    padding: 20px;
     text-align: center;
   }
   hr {
@@ -18,5 +19,9 @@
     legend {
       padding-left: 7px;
     }
+  }
+  &-inputs {
+    margin: auto;
+    max-width: 800px;
   }
 }

@@ -19,12 +19,18 @@
     }
   }
   .alter-buttons {
-    position: absolute;
+/*    position: absolute;
     top: 140px;
-    left: 10px;
-    @include tablet {
-      top: 10px;
+    left: 10px;*/
+    display: flex;
+    justify-content: end;
+    margin-bottom: -40px;
+    > * {
+      margin-right: 10px;
     }
+   /* @include tablet {
+      top: 10px;
+    }*/
   }
   &-btn:hover {
     color: white;

@@ -4,10 +4,8 @@ function createAddFile(fileCount)
 {
     // grab the prototype template
     let newWidget = $("#trick_videos").attr('data-prototype');
-
     // replace the "__name__" used in the id and name of the prototype
     newWidget = newWidget.replace(/__name__/g, fileCount);
-
     $("#trick_videos").append(newWidget);
 
     let newInput = document.getElementById(`trick_videos_${fileCount}`);
