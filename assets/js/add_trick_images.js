@@ -3,7 +3,7 @@ import $ from 'jquery';
 function createAddFile(fileCount)
 {
     // grab the prototype template
-    var newWidget = $("#trick_images").attr('data-prototype');
+    let newWidget = $("#trick_images").attr('data-prototype');
     // replace the "__name__" used in the id and name of the prototype
     newWidget = newWidget.replace(/__name__/g, fileCount);
     $("#trick_images").append(newWidget);

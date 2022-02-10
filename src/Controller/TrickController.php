@@ -51,23 +51,25 @@ class TrickController extends AbstractController
                 // on récupère le nom original du fichier
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $image;
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
-                $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
+                if ($uploadedFile) {
+                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
+                    $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
 
-                //on copie le fichier dans le dossier upload
-                $image->move(
-                    $this->getParameter('trick_image_directory'),
-                    $file
-                );
+                    //on copie le fichier dans le dossier upload
+                    $image->move(
+                        $this->getParameter('trick_image_directory'),
+                        $file
+                    );
 
-                // On stock l'image dans la base de données (son nom)
-                $img = new Image();
-                $img->setTitle($file);
-                $img->setCaption('Image of the '.$trick->getName().' trick');
-                $img->setPath('build/images/tricks');
+                    // On stock l'image dans la base de données (son nom)
+                    $img = new Image();
+                    $img->setTitle($file);
+                    $img->setCaption('Image of the '.$trick->getName().' trick');
+                    $img->setPath('build/images/tricks');
 
-                $trick->addImage($img);
+                    $trick->addImage($img);
+                }
             }
 
             //loop each videos
@@ -108,9 +110,10 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'trick_edit', methods: ['GET', 'POST'])]
+    #[Route('/{slug}/edit', name: 'trick_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Trick $trick, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
@@ -123,23 +126,25 @@ class TrickController extends AbstractController
                 // on récupère le nom original du fichier
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $image;
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
-                $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
+                if ($uploadedFile) {
+                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
+                    $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
 
-                //on copie le fichier dans le dossier upload
-                $image->move(
-                    $this->getParameter('trick_image_directory'),
-                    $file
-                );
+                    //on copie le fichier dans le dossier upload
+                    $image->move(
+                        $this->getParameter('trick_image_directory'),
+                        $file
+                    );
 
-                // On stock l'image dans la base de données (son nom)
-                $img = new Image();
-                $img->setTitle($file);
-                $img->setCaption('Image of the '.$trick->getName().' trick');
-                $img->setPath('build/images/tricks');
+                    // On stock l'image dans la base de données (son nom)
+                    $img = new Image();
+                    $img->setTitle($file);
+                    $img->setCaption('Image of the '.$trick->getName().' trick');
+                    $img->setPath('build/images/tricks');
 
-                $trick->addImage($img);
+                    $trick->addImage($img);
+                }
             }
 
             $trick->setAuthor($this->getUser());
@@ -181,6 +186,26 @@ class TrickController extends AbstractController
 
             // Delete image in database
             $entityManager->remove($image);
+            $entityManager->flush();
+
+            // Json response
+            return new JsonResponse(['success' => 1]);
+        }
+
+        return new JsonResponse(['error' => 'Invalid token'], 400);
+    }
+
+    #[Route('/delete/video/{id}', name: 'trick_delete_video', methods: 'DELETE')]
+    public function deleteVideo(Video $video, Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $data = json_decode($request->getContent(), true);
+
+        // check if token is valid
+        if ($this->isCsrfTokenValid('delete'.$video->getId(), $data['_token'])) {
+
+            // Delete video in database
+            $entityManager->remove($video);
             $entityManager->flush();
 
             // Json response

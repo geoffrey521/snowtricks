@@ -4,19 +4,159 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('add_trick_images') }}
+    {{ encore_entry_script_tags('add_trick_videos') }}
     {{ encore_entry_script_tags('delete_trick_images') }}
+    {{ encore_entry_script_tags('trick_form') }}
 {% endblock %}
 
 {% block body %}
-    <main class="mt-page container trickForm">
+    <main class="mt-page trickDetails container trickForm">
+{#        {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}#}
+
+        <h1 class="mainTitle">Edit Trick</h1>
+
+        <!-- Variables -->
+        {% set backgroundImage = (trick.images.first) ? asset('build/images/tricks/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
+        {% set author = trick.author.firstname ~ ' ' ~ trick.author.lastname %}
+        {{ form_start(form) }}
+        <!-- Hero -->
+        <div class="hero details-hero container">
+            <div class="alter-buttons">
+                <a href="#" class="d-inline-block btn btn-warning btn-sm"><i
+                            class="fas fa-pencil-alt"></i></a>
+                <a href="#" class="d-inline-block btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+            </div>
+            <div class="hero-image"
+                 style="background: url({{ backgroundImage }}), linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));">
+                <div class="hero-text">
+                    <h1 class="catchPhrase mainTitle">{{ trick.name }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tricks section -->
+        <section id="section_tricks" class="section-tricks">
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col text-center desktop-hidden">
+                        <button id="seeMediasBtn" class="seeMedias btn btn-orange">See medias</button>
+                    </div>
+                </div>
+
+                <div id="trickMedias" class="row section-tricks-medias mx-auto my-auto container">
+                    {% for image in trick.images %}
+                        <div class="col-12 col-sm-6 col-lg-2 mt-3">
+                            <div class="card">
+                                <img src="{{ asset('build/images/tricks/' ~ image.title) }}"
+                                     class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
+                                     data-bs-target="#media-modal-img-{{ loop.index }}">
+                            </div>
+                            <div class="alter-buttons mt-2">
+                                <a href="#" class="d-inline-block btn btn-warning btn-sm"><i
+                                            class="fas fa-pencil-alt"></i></a>
+                                <a href="{{ path('trick_delete_image', {id: image.id}) }}" data-delete
+                                   data-token="{{ csrf_token('delete' ~ image.id) }}"
+                                   class="d-inline-block btn btn-danger btn-sm"><i
+                                            class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% for video in trick.videos %}
+                        <div class="col-12 col-sm-6 col-lg-2 mt-3">
+                            <div class="card">
+                                <img src="{{ video.thumbnail }}"
+                                     class="img-fluid" alt="{{ trick.name }} video" data-bs-toggle="modal"
+                                     data-bs-target="#media-modal-vid-{{ loop.index }}">
+                            </div>
+                            <div class="alter-buttons mt-2">
+                                <a href="#" class="d-inline-block btn btn-warning btn-sm"><i
+                                            class="fas fa-pencil-alt"></i></a>
+                                <a href="{{ path('trick_delete_video', {id: video.id}) }}" data-delete
+                                   data-token="{{ csrf_token('delete' ~ video.id) }}"
+                                   class="d-inline-block btn btn-danger btn-sm"><i
+                                            class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="col-12 col-sm-6 col-lg-2 mt-3">
+                        <div class="card">
+                            <button id="add_medias" class="btn btn-orange h-100"><i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- form images and videos -->
+            <div id="edit_media_fields" class="d-none">
+                <div class="trickForm-images mt-5">
+                    {{ form_label(form.images, null, {
+                        'label_attr': {'class': 'w-auto me-2'}
+                    }) }}
+                    <button id="add_image" class="btn btn-orange"><i class="fas fa-plus-circle"></i></button>
+                </div>
+                {{ form_widget(form.images) }}
+
+                <div class="trickForm-videos">
+                    {{ form_label(form.videos, null, {
+                        'label_attr': {'class': 'me-2'}
+                    }) }}
+                    <button id="add_video" class="btn btn-orange"><i class="fas fa-plus-circle"></i></button>
+                </div>
+                {{ form_widget(form.videos) }}
+            </div>
+            <!-- end form images and videos -->
+
+            <!-- modals -->
+            {% for image in trick.images %}
+                <div class="modal fade" id="media-modal-img-{{ loop.index }}" tabindex="-1"
+                     aria-labelledby="modal-title" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <img src="{{ asset('build/images/tricks/' ~ image.title) }}"
+                                 class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
+                                 data-bs-target="#media-modal-img-{{ loop.index }}">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for video in trick.videos %}
+                <div class="modal modalCustom fade" id="media-modal-vid-{{ loop.index }}" tabindex="-1"
+                     aria-labelledby="modal-title" aria-hidden="true">
+                    <div class="modal-dialog modalCustom-dialog">
+                        <div class="modal-content modalCustom-content">
+                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <iframe width="100%" src="{{ video.url }}"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    data-bs-toggle="modal" data-bs-target="#media-modal-vid-{{ loop.index }}">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- end modals -->
+        </section>
+        <section class="trickForm-inputs mt-5">
+            {{ form_row(form.name) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.description) }}
+
+            <div class="mb-3 d-flex justify-content-end">
+                <a class="btn btn-danger me-2" href="#">Delete</a>
+                <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+            </div>
+
+        </section>
+
+        {{ form_end(form) }}
 
 
-    <h1 class="mainTitle">Edit Trick</h1>
+        <a href="{{ path('trick_index') }}">back to list</a>
 
-    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('trick_index') }}">back to list</a>
-
-    {{ include('trick/_delete_form.html.twig') }}
+        {{ include('trick/_delete_form.html.twig') }}
     </main>
 {% endblock %}

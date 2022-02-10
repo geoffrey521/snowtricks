@@ -24,6 +24,7 @@ Encore
     .addEntry('add_trick_images', './assets/js/add_trick_images.js')
     .addEntry('add_trick_videos', './assets/js/add_trick_videos.js')
     .addEntry('delete_trick_images', './assets/js/delete_trick_images.js')
+    .addEntry('trick_form', './assets/js/trick_form.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
