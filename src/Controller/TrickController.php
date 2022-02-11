@@ -75,14 +75,16 @@ class TrickController extends AbstractController
             //loop each videos
             foreach ($videos as $url) {
                 $video = new Video();
+                if ($url != null) {
+                    $videoDatas = $this->formatVideoDatasFromUrl($url);
+                    if ($videoDatas) {
+                        $video->setUrl($videoDatas['url']);
+                        $video->setThumbnail($videoDatas['thumbnail']);
 
-                $videoDatas = $this->formatVideoDatasFromUrl($url);
-                if ($videoDatas) {
-                    $video->setUrl($videoDatas['url']);
-                    $video->setThumbnail($videoDatas['thumbnail']);
-
-                    $trick->addVideo($video);
+                        $trick->addVideo($video);
+                    }
                 }
+
             }
 
             $trick->setAuthor($author);
@@ -161,16 +163,16 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'trick_delete', methods: ['POST'])]
+    #[Route('/delete/{slug}', name: 'trick_delete', methods: ['POST'])]
     public function delete(Request $request, Trick $trick, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
             $entityManager->remove($trick);
             $entityManager->flush();
+            $this->addFlash('success', "Trick has been removed");
         }
-
-        return $this->redirectToRoute('trick_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/delete/image/{id}', name: 'trick_delete_image', methods: 'DELETE')]
