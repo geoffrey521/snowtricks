@@ -80,7 +80,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Your account is successfully activated');
+            $this->addFlash('success', 'Your user is successfully activated');
 
             return $this->redirectToRoute('home');
         }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<main class="mt-page container dashboard">
+
+    <h1 class="mainTitle">Update your profile</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    <button>{{ button_label|default('save') }}</button>
+    {{ form_end(form) }}
+
+</main>
+{% endblock %}

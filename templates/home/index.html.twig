@@ -17,11 +17,6 @@
     </div>
 
     <main class="home">
-        {% for type, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ type }}">{{ message }}</div>
-            {% endfor %}
-        {% endfor %}
         <!-- Tricks content -->
         <section id="section_tricks" class="section-tricks">
             <div class="container mt-3 mb-5">
