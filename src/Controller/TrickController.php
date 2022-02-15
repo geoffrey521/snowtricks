@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Video;
+use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,10 +32,9 @@ class TrickController extends AbstractController
     }
 
     #[Route('/new', name: 'trick_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         $trick = new Trick();
 
         $form = $this->createForm(TrickType::class, $trick);
@@ -75,7 +76,7 @@ class TrickController extends AbstractController
             //loop each videos
             foreach ($videos as $url) {
                 $video = new Video();
-                if ($url != null) {
+                if (null != $url) {
                     $videoDatas = $this->formatVideoDatasFromUrl($url);
                     if ($videoDatas) {
                         $video->setUrl($videoDatas['url']);
@@ -84,7 +85,6 @@ class TrickController extends AbstractController
                         $trick->addVideo($video);
                     }
                 }
-
             }
 
             $trick->setAuthor($author);
@@ -101,14 +101,27 @@ class TrickController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'trick_show')]
-    public function show(Request $request, TrickRepository $trickRepository, string $slug): Response
+    public function show(Request $request, TrickRepository $trickRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, string $slug): Response
     {
         $trick = $trickRepository->findOneBySlug($slug);
         $limit = $request->query->getInt('limit');
 
-        return $this->render('trick/show.html.twig', [
+        $form = $this->createForm(CommentType::class);
+        $form->handleRequest($request);
+        $comment = $form->getData();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $author = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+            $comment->setAuthor($author);
+            $trick->addComment($comment);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+        }
+
+        return $this->renderForm('trick/show.html.twig', [
             'trick' => $trick,
             'limit' => $limit + 4,
+            'form' => $form,
         ]);
     }
 
@@ -170,15 +183,16 @@ class TrickController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
             $entityManager->remove($trick);
             $entityManager->flush();
-            $this->addFlash('success', "Trick has been removed");
+            $this->addFlash('success', 'Trick has been removed');
         }
+
         return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/delete/image/{id}', name: 'trick_delete_image', methods: 'DELETE')]
+    #[IsGranted('ROLE_USER')]
     public function deleteImage(Image $image, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $data = json_decode($request->getContent(), true);
 
         // check if token is valid
@@ -198,14 +212,13 @@ class TrickController extends AbstractController
     }
 
     #[Route('/delete/video/{id}', name: 'trick_delete_video', methods: 'DELETE')]
+    #[IsGranted('ROLE_USER')]
     public function deleteVideo(Video $video, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $data = json_decode($request->getContent(), true);
 
         // check if token is valid
         if ($this->isCsrfTokenValid('delete'.$video->getId(), $data['_token'])) {
-
             // Delete video in database
             $entityManager->remove($video);
             $entityManager->flush();

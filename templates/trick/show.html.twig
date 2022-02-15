@@ -112,14 +112,14 @@
         <!-- end trick section -->
         <hr/>
         <!-- leave comment section -->
-        <div class="row container m-auto g-3 align-items-center comment-form d-flex justify-content-center mt-5 mb-5">
-            <div class="col-lg-10 mt-0">
-            <textarea id="inputComment" name="content" class="form-control"
-                      placeholder="Write your comment..."></textarea>
-            </div>
-            <div class="col-lg-2 mt-lg-0 text-center">
-                <input type="submit" class="col-form-label btn btn-orange" value="Leave a comment">
-            </div>
+        <div class="row container m-auto g-3 comment-form mt-5 mb-5">
+        {% if app.user %}
+        {{ include('comment/_form.html.twig') }}
+        {% else %}
+                <div>
+                    <p>You need to be <a href="{{ path('app_login') }}">logged</a> or <a href="{{ path('app_register') }}">registered</a> to comment</p>
+                </div>
+        {% endif %}
         </div>
         <!-- end leave comment section -->
         <hr/>
