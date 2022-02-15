@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Form\AccountType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -18,14 +17,12 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function dashboard(Request $request, EntityManagerInterface $entityManager): Response
     {
-
         $user = $this->getUser();
 
         $form = $this->createForm(AccountType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -36,7 +33,7 @@ class UserController extends AbstractController
         }
 
         return $this->renderForm('user/dashboard.html.twig', [
-            'form' => $form
+            'form' => $form,
         ]);
     }
 }

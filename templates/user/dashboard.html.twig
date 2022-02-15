@@ -3,13 +3,15 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<main class="mt-page container dashboard">
+<main class="mt-page container dashboard form pt-5">
 
-    <h1 class="mainTitle">Update your profile</h1>
+    <h1 class="mainTitle text-center">Update your profile</h1>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
-    <button>{{ button_label|default('save') }}</button>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-success">{{ button_label|default('Update') }}</button>
+    </div>
     {{ form_end(form) }}
 
 </main>
