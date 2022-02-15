@@ -18,7 +18,7 @@ class Mailer
         $email = (new TemplatedEmail())
             ->from('register@example.com')
             ->to(new Address($recipient))
-            ->subject('Validate your account')
+            ->subject('Validate your user')
 
             // path of the Twig template to render
             ->htmlTemplate('emails/registration.html.twig')

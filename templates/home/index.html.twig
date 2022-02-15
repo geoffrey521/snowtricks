@@ -7,7 +7,7 @@
 
 {% block body %}
     <!-- Hero -->
-    <div class="hero mt-page home-hero">
+    <div class="hero home-hero">
         <div class="hero-image home-hero-image">
             <div class="hero-text">
                 <h1 class="catchPhrase mainTitle">A Snowboard Community Website</h1>
@@ -17,11 +17,6 @@
     </div>
 
     <main class="home">
-        {% for type, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ type }}">{{ message }}</div>
-            {% endfor %}
-        {% endfor %}
         <!-- Tricks content -->
         <section id="section_tricks" class="section-tricks">
             <div class="container mt-3 mb-5">

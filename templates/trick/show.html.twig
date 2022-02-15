@@ -7,7 +7,7 @@
     {% set backgroundImage = (trick.images.first) ? asset('build/images/tricks/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
     {% set author = trick.author.firstname ~ ' ' ~ trick.author.lastname %}
 
-    <main class="trickDetails mt-page">
+    <main class="trickDetails">
         <!-- Hero -->
         <div class="hero details-hero container">
             {% if app.user %}

@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"email"}, message="There is already an user with this email")
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -74,6 +74,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private bool $isActive;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $avatarUrl;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $avatarPath;
 
     public function __construct()
     {
@@ -356,6 +362,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     public function setIsActive(?bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getAvatarUrl(): ?string
+    {
+        return $this->avatarUrl;
+    }
+
+    public function setAvatarUrl(?string $avatarUrl): self
+    {
+        $this->avatarUrl = $avatarUrl;
+
+        return $this;
+    }
+
+    public function getAvatarPath(): ?string
+    {
+        return $this->avatarPath;
+    }
+
+    public function setAvatarPath(?string $avatarPath): self
+    {
+        $this->avatarPath = $avatarPath;
 
         return $this;
     }
