@@ -28,4 +28,11 @@
       right: 10px;
     }
   }
+  form {
+    @include desktop {
+      display: flex;
+      justify-content: space-between;
+    }
+
+  }
 }

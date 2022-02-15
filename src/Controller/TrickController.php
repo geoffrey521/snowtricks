@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Video;
+use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
@@ -101,14 +103,27 @@ class TrickController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'trick_show')]
-    public function show(Request $request, TrickRepository $trickRepository, string $slug): Response
+    public function show(Request $request, TrickRepository $trickRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, string $slug): Response
     {
         $trick = $trickRepository->findOneBySlug($slug);
         $limit = $request->query->getInt('limit');
 
-        return $this->render('trick/show.html.twig', [
+        $form = $this->createForm(CommentType::class);
+        $form->handleRequest($request);
+        $comment = $form->getData();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $author = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+            $comment->setAuthor($author);
+            $trick->addComment($comment);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+        }
+
+        return $this->renderForm('trick/show.html.twig', [
             'trick' => $trick,
             'limit' => $limit + 4,
+            'form' => $form
         ]);
     }
 
