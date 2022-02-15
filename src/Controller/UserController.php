@@ -23,8 +23,6 @@ class UserController extends AbstractController
         /** @var User $usr */
         $usr = $user;
 
-        dd($usr);
-
         $form = $this->createForm(AccountType::class, $usr);
         $form->handleRequest($request);
 
