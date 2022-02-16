@@ -65,7 +65,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                <img src="{{ backgroundImage }}"
+                                <img src="{{ asset('build/images/tricks/' ~ image.title) }}"
                                      class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
                                      data-bs-target="#media-modal-img-{{ loop.index }}">
                             </div>
@@ -112,7 +112,7 @@
         <!-- end trick section -->
         <hr/>
         <!-- leave comment section -->
-        <div class="row container m-auto g-3 comment-form mt-5 mb-5">
+        <div class="row container m-auto g-3 mt-5 mb-5">
         {% if app.user %}
         {{ include('comment/_form.html.twig') }}
         {% else %}
@@ -124,15 +124,18 @@
         <!-- end leave comment section -->
         <hr/>
         <!-- trick comments section -->
-        <section id="viewtrick_comments" class="comment-section mt-5 m-auto container">
+        <section id="viewtrick_comments" class="commentSection mt-5 m-auto container">
             {% for comment in trick.comments|slice(0, limit) %}
                 <div class="row mt-3 w-100">
-                    <div class="col-2 comment-section-image">
-                        {#  {{ comment.author.firstname ~ ' ' ~ comment.author.lastname }} #}
+                    <div class="col-2 commentSection-author">
                         {{ comment.author.username }}
+                        {% if comment.author.avatarUrl %}
+                        <img src="{{ asset('images/user/'~comment.author.avatarUrl) }}" alt="Avatar of {{ comment.author.username }}">
+                        {% endif %}
                     </div>
-                    <div class="col-10 comment-section-text">
-                        <p>
+                    <div class="col-10 commentSection-text">
+                        <p class="commentSection-text-date">{{ comment.createdAt|date("Y-m-d H:i:s") }}</p>
+                        <p class="commentSection-text-content">
                             {{ comment.content }}
                         </p>
                     </div>
