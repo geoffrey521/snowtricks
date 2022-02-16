@@ -25,8 +25,6 @@ class ResetPasswordController extends AbstractController
 
     public function __construct(private ResetPasswordHelperInterface $resetPasswordHelper, private EntityManagerInterface $entityManager, private Mailer $mailer)
     {
-        $this->resetPasswordHelper = $resetPasswordHelper;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -50,7 +48,7 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * Confirmation page after a user has requested a password reset.
+     * Confirmation page after a user has requested a password reset.https://www.subway.com/fr-FR/MenuNutrition/Menu/Product?ProductId=5384&MenuCategoryId=338.
      */
     #[Route('/check-email', name: 'app_check_email')]
     public function checkEmail(): Response
