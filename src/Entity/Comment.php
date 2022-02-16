@@ -26,7 +26,7 @@ class Comment implements EntityTimestampableInterface
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
-    private $author;
+    private User $author;
 
     public function getId(): ?int
     {

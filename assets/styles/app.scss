@@ -23,30 +23,6 @@
     }
 }
 
-.comment-form textarea {
-    height: 2rem;
-    word-wrap: break-word;
-    overflow:hidden;
-    resize: none;
-}
-
-.comment-section {
-    max-width: 800px;
-
-}
-
-.comment-section .comment-section-text {
-    border: 1px solid #ED7458;
-    padding-top: 10px;
-    background-color: rgba(237, 116, 88, 0.46);
-    border-radius: 3px;
-    vertical-align: middle;
-}
-
-.comment-section .comment-section-image img {
-    max-width: 100%;
-}
-
 /*########### slider *##########*/
 
 @media (max-width: 767px) {
