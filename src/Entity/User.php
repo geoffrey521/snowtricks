@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @UniqueEntity(fields={"email"}, message="There is already an user with this email")
@@ -18,6 +19,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(
+    fields: ['email', 'username']
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityTimestampableInterface
 {
     use EntityTimestampableTrait;
@@ -28,6 +32,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private int $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private string $email;
 
     #[ORM\Column(type: 'json')]
@@ -37,12 +43,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Assert\Length(min: 8, max: 255)]
+    #[Assert\NotBlank]
     private string $password;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 20)]
     private ?string $firstname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 20)]
     private ?string $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -70,6 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     private \DateTimeImmutable $agreedTermsAt;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(max: 30)]
     private string $username;
 
     #[ORM\Column(type: 'boolean', nullable: true)]

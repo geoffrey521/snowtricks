@@ -10,8 +10,14 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'There is already a trick with this name'
+)]
 class Trick implements EntitySlugInterface, EntityTimestampableInterface
 {
     use EntitySlugTrait;
@@ -23,18 +29,25 @@ class Trick implements EntitySlugInterface, EntityTimestampableInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 40)]
     private string $name;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 10, max: 1000)]
     private string $description;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Valid]
     private Collection $images;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\JoinColumn(nullable: false)]
     private Collection $videos;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]

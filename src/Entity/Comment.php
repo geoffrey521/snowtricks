@@ -6,6 +6,7 @@ use App\Entity\traits\EntityTimestampableTrait;
 use App\Model\EntityTimestampableInterface;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment implements EntityTimestampableInterface
@@ -18,6 +19,8 @@ class Comment implements EntityTimestampableInterface
     private int $id;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\Length(max: 200)]
+    #[Assert\NotBlank]
     private string $content;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'comments')]
