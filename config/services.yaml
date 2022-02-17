@@ -28,3 +28,9 @@ services:
     App\EventListener\DoctrineSubscribe:
         tags:
             - name: 'doctrine.event_subscriber'
+    App\EventListener\VideoListener:
+        tags:
+            - name: 'doctrine.event_listener'
+              # this is the only required option for the lifecycle listener tag
+              event: 'prePersist'
+              priority: 500

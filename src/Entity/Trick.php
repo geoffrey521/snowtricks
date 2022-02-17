@@ -48,6 +48,7 @@ class Trick implements EntitySlugInterface, EntityTimestampableInterface
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class, cascade: ['persist'], orphanRemoval: true)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Valid]
     private Collection $videos;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]

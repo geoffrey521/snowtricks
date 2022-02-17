@@ -44,7 +44,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
 
     #[ORM\Column(type: 'string')]
     #[Assert\Length(min: 8, max: 255)]
-    #[Assert\NotBlank]
     private string $password;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
