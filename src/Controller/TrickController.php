@@ -44,7 +44,6 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // getting images and videos transmitted by form
             $images = $form->get('images')->getData();
-            $videos = $form->get('videos')->getData();
             $author = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
 
             // loop each images

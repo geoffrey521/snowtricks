@@ -10,10 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Url;
-use Symfony\Component\Validator\Constraints as Assert;
-
 
 class TrickType extends AbstractType
 {
@@ -40,24 +39,23 @@ class TrickType extends AbstractType
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
-            //    'mapped' => false,
+                //    'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new Count([
                         'min' => 1,
-                        'minMessage' => 'You need to add 1 video minimum'
+                        'minMessage' => 'You need to add 1 video minimum',
                     ]),
                     new Assert\All([
                         new Url([
-                            'message' => 'Please insert a valide url, youtube or dailymotion'
+                            'message' => 'Please insert a valide url, youtube or dailymotion',
                         ]),
                         new Assert\Regex([
                             'pattern' => '(youtube\.com|dailymotion\.com)',
-                            'message' => 'please insert a youtube or dailymotion url'
-                        ])
-                    ])
-                ]
-
+                            'message' => 'please insert a youtube or dailymotion url',
+                        ]),
+                    ]),
+                ],
             ])
         ;
 
