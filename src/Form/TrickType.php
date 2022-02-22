@@ -11,12 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Url;
 
 class TrickType extends AbstractType
 {
-    public function __construct(private VideoToLinkTransform $transformer)
+    public function __construct(private VideoToLinkTransform $videoTransform)
     {
     }
 
@@ -33,33 +33,31 @@ class TrickType extends AbstractType
                 'allow_delete' => true,
                 'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new Assert\All([
+                        new Image(),
+                    ]),
+                ],
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => TextType::class,
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
-                //    'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    new Count([
-                        'min' => 1,
-                        'minMessage' => 'You need to add 1 video minimum',
-                    ]),
                     new Assert\All([
-                        new Url([
-                            'message' => 'Please insert a valide url, youtube or dailymotion',
-                        ]),
+                        new Url(),
                         new Assert\Regex([
                             'pattern' => '(youtube\.com|dailymotion\.com)',
-                            'message' => 'please insert a youtube or dailymotion url',
+                            'message' => 'Please insert a youtube or dailymotion url',
                         ]),
                     ]),
                 ],
             ])
         ;
 
-        $builder->get('videos')->addModelTransformer($this->transformer);
+        $builder->get('videos')->addModelTransformer($this->videoTransform);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

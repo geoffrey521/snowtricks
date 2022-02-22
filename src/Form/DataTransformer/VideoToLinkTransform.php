@@ -13,13 +13,13 @@ class VideoToLinkTransform implements DataTransformerInterface
     {
     }
 
-    public function transform($videos)
+    public function transform($value)
     {
-        if (null === $videos) {
+        if (null === $value) {
             return [];
         }
 
-        return $videos->map(function (Video $video) {
+        return $value->map(function (Video $video) {
             return $video->getUrl();
         })->toArray();
     }

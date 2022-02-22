@@ -6,6 +6,13 @@
   }
   .section-tricks-medias {
     position: relative;
+    .card-play {
+      position: absolute;
+      font-size: 60px;
+      top: calc(50% - 30px);
+      left: calc(50% - 30px);
+      color: rgba(255, 255, 255, .5);
+    }
   }
   .card-img {
     width: auto;

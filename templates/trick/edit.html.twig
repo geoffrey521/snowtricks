@@ -12,12 +12,11 @@
 
 {% block body %}
     <main class="trickDetails container trickForm">
-{#        {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}#}
 
         <h1 class="mainTitle">Edit Trick</h1>
 
         <!-- Variables -->
-        {% set backgroundImage = (trick.images.first) ? asset('build/images/tricks/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
+        {% set backgroundImage = (trick.images.first) ? asset('images/trick/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
         {% set author = trick.author.firstname ~ ' ' ~ trick.author.lastname %}
         {{ form_start(form) }}
         <!-- Hero -->
@@ -48,7 +47,7 @@
                     {% for image in trick.images %}
                         <div class="col-12 col-sm-6 col-lg-2 mt-3">
                             <div class="card">
-                                <img src="{{ asset('build/images/tricks/' ~ image.title) }}"
+                                <img src="{{ asset('images/trick/' ~ image.title) }}"
                                      class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
                                      data-bs-target="#media-modal-img-{{ loop.index }}">
                             </div>
@@ -99,12 +98,18 @@
                 {{ form_widget(form.images) }}
 
                 <div class="trickForm-videos">
-                    {{ form_label(form.videos, null, {
-                        'label_attr': {'class': 'me-2'}
-                    }) }}
-                    <button id="add_video" class="btn btn-orange"><i class="fas fa-plus-circle"></i></button>
+                    <div class="trickForm-videos-legend">
+                        {{ form_label(form.videos, null, {
+                            'label_attr': {'class': 'me-2'}
+                        }) }}
+                        <button id="add_video" class="btn btn-orange"><i class="fas fa-plus-circle"></i></button>
+                    </div>
+                    <div class="trickForm-videos-each">
+                        {{ form_widget(form.videos) }}
+                    </div>
+
                 </div>
-                {{ form_widget(form.videos) }}
+
             </div>
             <!-- end form images and videos -->
 
@@ -115,7 +120,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            <img src="{{ asset('build/images/tricks/' ~ image.title) }}"
+                            <img src="{{ asset('images/trick/' ~ image.title) }}"
                                  class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
                                  data-bs-target="#media-modal-img-{{ loop.index }}">
                         </div>

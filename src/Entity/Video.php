@@ -17,7 +17,7 @@ class Video
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'videos')]
     #[ORM\JoinColumn(nullable: false)]
-    private Trick $trick;
+    private ?Trick $trick;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]

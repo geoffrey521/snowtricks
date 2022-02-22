@@ -32,6 +32,9 @@ class Image
     #[ORM\Column(type: 'string', length: 255)]
     private string $path;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $promoted;
+
     public function __toString(): string
     {
         return $this->title;
@@ -86,6 +89,18 @@ class Image
     public function setPath(string $path): self
     {
         $this->path = $path;
+
+        return $this;
+    }
+
+    public function getPromoted(): ?bool
+    {
+        return $this->promoted;
+    }
+
+    public function setPromoted(?bool $promoted): self
+    {
+        $this->promoted = $promoted;
 
         return $this;
     }

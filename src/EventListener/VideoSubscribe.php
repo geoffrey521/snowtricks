@@ -4,12 +4,22 @@ namespace App\EventListener;
 
 use App\Entity\Video;
 use App\Service\FormatVideo;
+use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
+use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-class VideoListener
+class VideoSubscribe implements EventSubscriberInterface
 {
     public function __construct(private FormatVideo $formatVideo)
     {
+    }
+
+    public function getSubscribedEvents(): array
+    {
+        return [
+            Events::prePersist,
+            Events::preUpdate,
+        ];
     }
 
     public function prePersist(LifecycleEventArgs $args): void
@@ -35,6 +45,7 @@ class VideoListener
         if ($videoDatas) {
             $video->setUrl($videoDatas['url']);
             $video->setThumbnail($videoDatas['thumbnail']);
+            $video->setTrick($video->getTrick());
         }
     }
 }
