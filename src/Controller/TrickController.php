@@ -97,6 +97,8 @@ class TrickController extends AbstractController
             $trick->addComment($comment);
             $entityManager->persist($comment);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Your comment has been posted');
         }
 
         return $this->renderForm('trick/show.html.twig', [
