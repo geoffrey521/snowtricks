@@ -4,7 +4,8 @@
 
 {% block body %}
     <!-- Variables -->
-    {% set backgroundImage = (trick.images.first) ? asset('images/trick/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
+    {% set promotedImage = trick.promotedImage %}
+    {% set backgroundImage = (promotedImage) ? asset('images/trick/' ~ promotedImage.path) : asset('images/snowboard_default.jpg') %}
     {% set author = trick.author.username %}
 
     <main class="trickDetails">
@@ -39,13 +40,15 @@
 
                 <div id="trickMedias" class="row section-tricks-medias mx-auto my-auto container">
                     {% for image in trick.images %}
+                        {% if image.path != promotedImage.path %}
                             <div class="col-12 col-sm-6 col-lg-2 mt-3">
                                 <div class="card">
-                                    <img src="{{ asset('images/trick/' ~ image.title) }}"
+                                    <img src="{{ asset('images/trick/' ~ image.path) }}"
                                          class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
                                          data-bs-target="#media-modal-img-{{ loop.index }}">
                                 </div>
                             </div>
+                        {% endif %}
                     {% endfor %}
                     {% for video in trick.videos %}
                             <div class="col-12 col-sm-6 col-lg-2 mt-3">
@@ -63,17 +66,19 @@
 
                 <!-- modals -->
                 {% for image in trick.images %}
+                    {% if image.path != promotedImage.path %}
                     <div class="modal fade" id="media-modal-img-{{ loop.index }}" tabindex="-1"
                          aria-labelledby="modal-title" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                <img src="{{ asset('images/trick/' ~ image.title) }}"
+                                <img src="{{ asset('images/trick/' ~ image.path) }}"
                                      class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
                                      data-bs-target="#media-modal-img-{{ loop.index }}">
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 {% endfor %}
                 {% for video in trick.videos %}
                     <div class="modal modalCustom fade" id="media-modal-vid-{{ loop.index }}" tabindex="-1"

@@ -15,10 +15,6 @@ class Image
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Image(
-        mimeTypes: ['image/jpeg', 'image/jpg', 'image/png'],
-        mimeTypesMessage: 'this file extension in not valid, please select a .jpg, .jpeg or .png file'
-    )]
     #[Assert\NotBlank]
     private string $title;
 

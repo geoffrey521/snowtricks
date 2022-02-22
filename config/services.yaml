@@ -31,6 +31,12 @@ services:
     App\EventListener\VideoSubscribe:
         tags:
             - name: 'doctrine.event_subscriber'
+    App\EventListener\UserRefreshListener:
+        tags:
+            -
+              name: 'doctrine.event_listener'
+              event: 'postUpdate'
+              entity: 'App\Entity\User'
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%kernel.project_dir%/public/images/trick'

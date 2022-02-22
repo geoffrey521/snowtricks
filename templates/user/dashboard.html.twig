@@ -1,12 +1,26 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Dashboard{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('user') }}
 
+{% endblock %}
 {% block body %}
 <main class="mt-page container dashboard form pt-5">
 
     <h1 class="mainTitle text-center">Update your profile</h1>
-
+    {% if app.user.avatarUrl %}
+    <div class="dashboard-avatar mb-4 mt-5">
+        <img src="{{ asset('images/user/'~app.user.avatarUrl) }}" alt="profile picture" class="rounded mx-auto d-block w-25">
+        <div class="alter-buttons w-25 m-auto">
+            <a href="{{ path('user_delete_image') }}"
+               class="d-inline-block btn btn-danger btn-sm mt-2 data-delete"
+               data-token="{{ csrf_token('delete' ~ app.user.avatarUrl) }}"
+            ><i class="fas fa-trash-alt"></i></a>
+        </div>
+    </div>
+    {% endif %}
     {{ form_start(form) }}
         {{ form_widget(form) }}
     <div class="d-flex justify-content-end">

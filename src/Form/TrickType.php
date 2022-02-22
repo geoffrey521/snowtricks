@@ -26,7 +26,7 @@ class TrickType extends AbstractType
             ->add('name')
             ->add('category')
             ->add('description')
-            ->add('images', CollectionType::class, [
+            ->add('photos', CollectionType::class, [
                 'entry_type' => FileType::class,
                 'prototype' => true,
                 'allow_add' => true,
@@ -39,12 +39,13 @@ class TrickType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('videos', CollectionType::class, [
+            ->add('links', CollectionType::class, [
                 'entry_type' => TextType::class,
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
+                'mapped' => false,
                 'constraints' => [
                     new Assert\All([
                         new Url(),
@@ -56,8 +57,6 @@ class TrickType extends AbstractType
                 ],
             ])
         ;
-
-        $builder->get('videos')->addModelTransformer($this->videoTransform);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
