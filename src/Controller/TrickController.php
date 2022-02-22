@@ -9,6 +9,8 @@ use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
+use App\Service\FileUploader;
+use App\Service\FormatVideo;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,13 +29,13 @@ class TrickController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         return $this->render('trick/index.html.twig', [
-            'tricks' => $trickRepository->findAll(),
+            'tricks' => $trickRepository->findBy([], ['createdAt' => 'DESC']),
         ]);
     }
 
     #[Route('/new', name: 'trick_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, FileUploader $fileUploader): Response
     {
         $trick = new Trick();
 
@@ -44,54 +46,33 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // getting images and videos transmitted by form
             $images = $form->get('images')->getData();
-            $videos = $form->get('videos')->getData();
             $author = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
 
             // loop each images
             foreach ($images as $image) {
-                // on récupère le nom original du fichier
                 /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $image;
-                if ($uploadedFile) {
-                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
-                    $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
+                $file = $image;
 
-                    //on copie le fichier dans le dossier upload
-                    $image->move(
-                        $this->getParameter('trick_image_directory'),
-                        $file
-                    );
-
-                    // On stock l'image dans la base de données (son nom)
+                if ($file) {
+                    $uploadedFileName = $fileUploader->uploadImage($file);
+                    // get datas into database
                     $img = new Image();
-                    $img->setTitle($file);
+                    $img->setTitle($uploadedFileName);
                     $img->setCaption('Image of the '.$trick->getName().' trick');
-                    $img->setPath('build/images/tricks');
+                    $img->setPath('images/tricks');
 
                     $trick->addImage($img);
                 }
             }
 
-            //loop each videos
-            foreach ($videos as $url) {
-                $video = new Video();
-                if (null != $url) {
-                    $videoDatas = $this->formatVideoDatasFromUrl($url);
-                    if ($videoDatas) {
-                        $video->setUrl($videoDatas['url']);
-                        $video->setThumbnail($videoDatas['thumbnail']);
-
-                        $trick->addVideo($video);
-                    }
-                }
-            }
-
             $trick->setAuthor($author);
+
             $entityManager->persist($trick);
             $entityManager->flush();
 
-            return $this->redirectToRoute('trick_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Trick has been created');
+
+            return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('trick/new.html.twig', [
@@ -126,48 +107,41 @@ class TrickController extends AbstractController
     }
 
     #[Route('/{slug}/edit', name: 'trick_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Trick $trick, EntityManagerInterface $entityManager): Response
+    #[IsGranted('ROLE_USER')]
+    public function edit(Request $request, Trick $trick, EntityManagerInterface $entityManager, FileUploader $fileUploader, FormatVideo $formatVideo): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // on récupère les images transmises
-            $images = $form->get('images')->getData();
+            // we get uploaded images
+            $imagesDatas = $form->get('images')->getData();
 
-            // on boucle sur les images
-            foreach ($images as $image) {
-                // on récupère le nom original du fichier
+            foreach ($imagesDatas as $imageData) {
                 /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $image;
-                if ($uploadedFile) {
-                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    // on génère un nouveau nom de fichier à partir de l'original et en lui donnant un id unique
-                    $file = str_replace(' ', '-', $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension());
+                $file = $imageData;
 
-                    //on copie le fichier dans le dossier upload
-                    $image->move(
-                        $this->getParameter('trick_image_directory'),
-                        $file
-                    );
+                if (!empty($file)) {
+                    $uploadedFileName = $fileUploader->uploadImage($file);
+                    // get datas into database
+                    $image = new Image();
+                    $image->setTitle($uploadedFileName);
+                    $image->setCaption('Image of the '.$trick->getName().' trick');
+                    $image->setPath('images/tricks');
+                    $image->setTrick($trick);
 
-                    // On stock l'image dans la base de données (son nom)
-                    $img = new Image();
-                    $img->setTitle($file);
-                    $img->setCaption('Image of the '.$trick->getName().' trick');
-                    $img->setPath('build/images/tricks');
-
-                    $trick->addImage($img);
+                    $trick->addImage($image);
                 }
             }
-
             $trick->setAuthor($this->getUser());
+
             $entityManager->persist($trick);
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('trick_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Trick has been updated');
+
+            return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('trick/edit.html.twig', [
@@ -187,6 +161,13 @@ class TrickController extends AbstractController
         }
 
         return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/edit/image/{id}', name: 'trick_edit_image')]
+    #[IsGranted('ROLE_USER')]
+    public function editVideo(Video $video, Request $request, EntityManagerInterface $entityManager)
+    {
+        dd($video);
     }
 
     #[Route('/delete/image/{id}', name: 'trick_delete_image', methods: 'DELETE')]
@@ -228,29 +209,5 @@ class TrickController extends AbstractController
         }
 
         return new JsonResponse(['error' => 'Invalid token'], 400);
-    }
-
-    public function formatVideoDatasFromUrl(string $url): array|false
-    {
-        $videoDatas = [];
-        $isYoutube = str_contains($url, 'youtube');
-        $isDailymotion = str_contains($url, 'dailymotion');
-
-        if ($isYoutube | $isDailymotion) {
-            if ($isYoutube) {
-                $videoDatas['url'] = str_replace('watch?v=', 'embed/', $url);
-                $separatedLinkElements = explode('/', $videoDatas['url']);
-                $videoDatas['thumbnail'] = 'https://img.youtube.com/vi/'.end($separatedLinkElements).'/0.jpg';
-            }
-            if ($isDailymotion) {
-                $videoDatas['url'] = str_replace('video', 'embed/video', $url);
-                $separatedLinkElements = explode('/', $videoDatas['url']);
-                $videoDatas['thumbnail'] = 'https://www.dailymotion.com/thumbnail/video/'.end($separatedLinkElements);
-            }
-
-            return $videoDatas;
-        }
-
-        return false;
     }
 }

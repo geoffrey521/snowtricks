@@ -22,7 +22,7 @@
             <div class="container mt-3 mb-5">
                 <div class="row home-trickList">
                     {% for trick in tricks %}
-                        {% set imageUrl = (trick.images.first) ? asset('build/images/tricks/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
+                        {% set imageUrl = (trick.images.first) ? asset('images/trick/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
                         {% set imageCaption = (trick.images.first) ? trick.images.first.caption : 'default trick image' %}
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2_4 mt-3">
                         <div class="card">

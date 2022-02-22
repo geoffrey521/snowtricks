@@ -4,7 +4,7 @@
 
 {% block body %}
     <!-- Variables -->
-    {% set backgroundImage = (trick.images.first) ? asset('build/images/tricks/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
+    {% set backgroundImage = (trick.images.first) ? asset('images/trick/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
     {% set author = trick.author.firstname ~ ' ' ~ trick.author.lastname %}
 
     <main class="trickDetails">
@@ -41,7 +41,7 @@
                     {% for image in trick.images %}
                             <div class="col-12 col-sm-6 col-lg-2 mt-3">
                                 <div class="card">
-                                    <img src="{{ asset('build/images/tricks/' ~ image.title) }}"
+                                    <img src="{{ asset('images/trick/' ~ image.title) }}"
                                          class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
                                          data-bs-target="#media-modal-img-{{ loop.index }}">
                                 </div>
@@ -49,10 +49,13 @@
                     {% endfor %}
                     {% for video in trick.videos %}
                             <div class="col-12 col-sm-6 col-lg-2 mt-3">
-                                <div class="card">
+                                <div class="card" data-bs-toggle="modal"
+                                     data-bs-target="#media-modal-vid-{{ loop.index }}">
                                     <img src="{{ video.thumbnail }}"
-                                         class="img-fluid" alt="{{ trick.name }} video" data-bs-toggle="modal"
-                                         data-bs-target="#media-modal-vid-{{ loop.index }}">
+                                         class="img-fluid" alt="{{ trick.name }} video" >
+                                    <div class="card-play">
+                                        <i class="fas fa-play-circle"></i>
+                                    </div>
                                 </div>
                             </div>
                     {% endfor %}
@@ -65,7 +68,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                <img src="{{ asset('build/images/tricks/' ~ image.title) }}"
+                                <img src="{{ asset('images/trick/' ~ image.title) }}"
                                      class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
                                      data-bs-target="#media-modal-img-{{ loop.index }}">
                             </div>

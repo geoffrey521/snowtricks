@@ -40,10 +40,8 @@ class UserController extends AbstractController
                 $usr->setAvatarUrl($file);
                 $usr->setAvatarPath('images/user');
                 $entityManager->persist($usr);
+                $entityManager->flush();
             }
-
-            $entityManager->persist($usr);
-            $entityManager->flush();
 
             $this->addFlash(
                 'success',

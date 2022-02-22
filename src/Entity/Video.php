@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Video
 {
     #[ORM\Id]
@@ -15,9 +17,11 @@ class Video
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'videos')]
     #[ORM\JoinColumn(nullable: false)]
-    private Trick $trick;
+    private ?Trick $trick;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Url]
     private string $url;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

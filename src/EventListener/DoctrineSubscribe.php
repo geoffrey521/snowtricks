@@ -11,7 +11,17 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class DoctrineSubscribe implements EventSubscriberInterface
 {
-    public function __construct(private SluggerInterface $slugger){}
+    public function __construct(private SluggerInterface $slugger)
+    {
+    }
+
+    public function getSubscribedEvents(): array
+    {
+        return [
+            Events::prePersist,
+            Events::preUpdate,
+        ];
+    }
 
     public function prePersist(LifecycleEventArgs $eventArgs)
     {
@@ -33,13 +43,5 @@ class DoctrineSubscribe implements EventSubscriberInterface
         if ($object instanceof EntitySlugInterface) {
             $object->computeSlug($this->slugger);
         }
-    }
-
-    public function getSubscribedEvents(): array
-    {
-        return [
-            Events::prePersist,
-            Events::preUpdate
-        ];
     }
 }
