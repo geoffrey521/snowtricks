@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use App\Entity\Video;
 use App\Form\CommentType;
 use App\Form\TrickType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
@@ -82,10 +83,12 @@ class TrickController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'trick_show')]
-    public function show(Request $request, TrickRepository $trickRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, string $slug): Response
+    public function show(Request $request, TrickRepository $trickRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, string $slug, CommentRepository $commentRepository): Response
     {
         $trick = $trickRepository->findOneBySlug($slug);
         $limit = $request->query->getInt('limit');
+
+        $comments = $commentRepository->findBy(['trick' => $trick], ['createdAt' => 'DESC']);
 
         $form = $this->createForm(CommentType::class);
         $form->handleRequest($request);
@@ -97,11 +100,16 @@ class TrickController extends AbstractController
             $trick->addComment($comment);
             $entityManager->persist($comment);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Your comment has been posted');
+
+            return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('trick/show.html.twig', [
             'trick' => $trick,
-            'limit' => $limit + 4,
+            'comments' => $comments,
+            'limit' => $limit + 10,
             'form' => $form,
         ]);
     }

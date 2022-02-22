@@ -1,5 +1,6 @@
 .home {
   &-hero {
+    position: relative;
     &-image {
       background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("../../images/header-background.jpg");
     }
