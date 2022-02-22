@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,6 +52,29 @@ class UserController extends AbstractController
 
         return $this->renderForm('user/dashboard.html.twig', [
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/delete/image/', name: 'user_delete_image')]
+    #[IsGranted('ROLE_USER')]
+    public function deleteImage(Request $request, EntityManagerInterface $entityManager)
+    {
+        if ($this->isCsrfTokenValid('delete'.$this->getUser()->getAvatarUrl(), $request->toArray()['_token'])) {
+            $user = $this->getUser();
+            $user->setAvatarUrl(null);
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+            dump($user);
+
+            return new JsonResponse([
+                'success' => true,
+            ]);
+        }
+
+        return new JsonResponse([
+            'success' => false,
+            'error' => 'invalid datas',
         ]);
     }
 }

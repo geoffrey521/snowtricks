@@ -26,12 +26,13 @@ class AppFixtures extends Fixture
             'roles' => ['ROLE_ADMIN'],
             'username' => 'admin',
             'email' => 'admin@snowtricks.fr',
+            'isActive' => true,
         ]);
 
         ImageFactory::createMany(30);
 
         TrickFactory::createMany(
-            300,
+            20,
             [
                 'images' => ImageFactory::new()->many(2, 5),
                 'videos' => VideoFactory::new()->many(2, 5),

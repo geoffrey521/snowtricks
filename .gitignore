@@ -38,5 +38,5 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 ###> Ignore upload files ###
-/assets/images/trick/
+/public/images/trick/
 /public/images/user/

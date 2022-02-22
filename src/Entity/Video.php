@@ -13,7 +13,7 @@ class Video
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'videos')]
     #[ORM\JoinColumn(nullable: false)]
@@ -25,7 +25,7 @@ class Video
     private string $url;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $thumbnail;
+    private ?string $thumbnail = null;
 
     public function __toString(): string
     {

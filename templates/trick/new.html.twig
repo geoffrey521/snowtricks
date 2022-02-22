@@ -4,7 +4,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('add_trick_images') }}
+    {{ encore_entry_script_tags('trick_images') }}
     {{ encore_entry_script_tags('add_trick_videos') }}
 
 {% endblock %}
@@ -15,7 +15,5 @@
         <h1 class="mainTitle">Create new Trick</h1>
 
         {{ include('trick/_form.html.twig') }}
-
-        <a href="{{ path('trick_index') }}">back to list</a>
     </main>
 {% endblock %}

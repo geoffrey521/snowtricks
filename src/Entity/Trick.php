@@ -212,4 +212,17 @@ class Trick implements EntitySlugInterface, EntityTimestampableInterface
 
         return $this;
     }
+
+    public function getPromotedImage(): ?Image
+    {
+        if (0 === $this->images->count()) {
+            return null;
+        }
+
+        $promotedImage = $this->images->filter(function (Image $image) {
+            return $image->getPromoted();
+        })->first();
+
+        return $promotedImage ? $promotedImage : $this->images->first();
+    }
 }

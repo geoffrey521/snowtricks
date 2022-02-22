@@ -19,9 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity(
-    fields: ['email', 'username']
-)]
+#[UniqueEntity(fields: ['email'])]
+#[UniqueEntity(fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityTimestampableInterface
 {
     use EntityTimestampableTrait;
@@ -78,12 +77,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $agreedTermsAt;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Assert\Length(max: 30)]
     private string $username;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private bool $isActive;
+    private bool $isActive = false;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $avatarUrl;
@@ -126,7 +125,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
