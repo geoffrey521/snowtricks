@@ -5,7 +5,7 @@
 {% block body %}
     <!-- Variables -->
     {% set backgroundImage = (trick.images.first) ? asset('images/trick/' ~ trick.images.first.title) : asset('images/snowboard_default.jpg') %}
-    {% set author = trick.author.firstname ~ ' ' ~ trick.author.lastname %}
+    {% set author = trick.author.username %}
 
     <main class="trickDetails">
         <!-- Hero -->
@@ -128,28 +128,35 @@
         <hr/>
         <!-- trick comments section -->
         <section id="viewtrick_comments" class="commentSection mt-5 m-auto container">
-            {% for comment in trick.comments|slice(0, limit) %}
+            {% for comment in comments|slice(0, limit) %}
                 <div class="row mt-3 w-100">
                     <div class="col-2 commentSection-author">
-                        {{ comment.author.username }}
                         {% if comment.author.avatarUrl %}
                         <img src="{{ asset('images/user/'~comment.author.avatarUrl) }}" alt="Avatar of {{ comment.author.username }}">
                         {% endif %}
                     </div>
                     <div class="col-10 commentSection-text">
-                        <p class="commentSection-text-date">{{ comment.createdAt|date("Y-m-d H:i:s") }}</p>
+                        <p class="commentSection-text-date"><span class="fw-bold">{{ comment.author.username }}</span> {{ comment.createdAt|date("Y-m-d")}} at {{ comment.createdAt|date("H:i:s")}}</p>
                         <p class="commentSection-text-content">
                             {{ comment.content }}
                         </p>
                     </div>
                 </div>
             {% endfor %}
+
             <div class="row">
+                {% if comments|length > limit %}
                 <div class="col text-center">
                     <a href="{{ path('trick_show', {'slug' : trick.slug, 'limit' : limit }) }}#section_tricks"
                        class="loadMore mt-5 btn btn-orange">Load More</a>
                 </div>
+                {% else %}
+                <div class="col text-center mt-5">
+                    <p>No more comments</p>
+                </div>
+                {% endif %}
             </div>
+
         </section>
     </main>
 {% endblock %}
