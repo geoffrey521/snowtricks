@@ -65,7 +65,6 @@ class UserController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
-            dump($user);
 
             return new JsonResponse([
                 'success' => true,

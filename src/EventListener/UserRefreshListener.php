@@ -20,6 +20,5 @@ class UserRefreshListener
         }
 
         $this->tokenStorage->getToken()->setUser($entity);
-        dump($entity);
     }
 }

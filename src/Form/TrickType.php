@@ -57,8 +57,6 @@ class TrickType extends AbstractType
                 ],
             ])
         ;
-
-        //$builder->get('videos')->addModelTransformer($this->videoTransform);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

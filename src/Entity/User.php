@@ -186,15 +186,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
         return null;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
     public function getFirstname(): ?string
     {
         return $this->firstname;
