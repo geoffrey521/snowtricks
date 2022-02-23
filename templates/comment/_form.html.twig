@@ -1,0 +1,15 @@
+   {{ form_start(form, { 'attr': { 'class': 'commentForm'}}) }}
+    <div class="col-lg-10 mt-0">
+            {{ form_widget(form.content, {
+                'attr': {
+                    'id': 'inputComment',
+                    'placeholder': 'Write your comment...'
+                }
+            }) }}
+    </div>
+    <div class="col-lg-2 mt-3 mt-lg-0 text-center">
+        <button class="col-form-label btn btn-orange">
+            {{ button_label|default('Leave a comment') }}
+        </button>
+    </div>
+   {{ form_end(form) }}

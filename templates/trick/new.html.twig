@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Trick{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('trick_images') }}
+    {{ encore_entry_script_tags('add_trick_videos') }}
+
+{% endblock %}
+
+{% block body %}
+    <main class="container trickForm">
+
+        <h1 class="mainTitle">Create new Trick</h1>
+
+        {{ include('trick/_form.html.twig') }}
+    </main>
+{% endblock %}

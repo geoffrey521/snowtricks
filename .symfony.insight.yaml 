@@ -1,0 +1,4 @@
+php_version: '8.0'
+pre_composer_script: |
+    #!/bin/bash
+    composer config platform.php 8.0.13

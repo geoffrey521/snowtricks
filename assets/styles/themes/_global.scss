@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+  /* add inertia to IOS */
+  -webkit-overflow-scrolling: touch;
+  word-break: break-word;
+}
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+}
+.mobile-hidden {
+  @include tablet {
+    display: none;
+  }
+}
+.desktop-hidden {
+  @include desktop {
+    display: none;
+  }
+}
+.mt-page {
+  @include desktop {
+    margin-top: 130px;
+  }
+}
+

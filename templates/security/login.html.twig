@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <main class="login auth text-center">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+        <!-- login form -->
+        <div class="row d-flex justify-content-center">
+            <div class="col-10 col-md-6 col-lg-4">
+                <form class="authForm m-auto mt-5 border p-5" method="post">
+                    <h1>Login</h1>
+                    <div class="mb-5 mt-5 d-flex flex-column align-items-center">
+                        <label for="inputUsername" class="form-label">Username</label>
+                        <input type="test" name="username" class="form-control form-username" id="inputUsername" value="{{ last_username }}" required autofocus>
+                    </div>
+
+                    <div class="mb-3 d-flex flex-column align-items-center">
+                        <label for="inputPassword" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control form-password" id="inputPassword" autocomplete="current-password" required>
+                    </div>
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+                    <input type="submit" class="mt-5 btn-orange btn btn-auth" value="Login">
+                    <div class="mt-5 desktop-hidden">
+                        <a href="{{ path('app_register') }}" class="btn">Register</a>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{{ path('app_forgot_password_request') }}">Forgot Password ?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    {#
+        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+        See https://symfony.com/doc/current/security/remember_me.html
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Remember me
+            </label>
+        </div>
+    #}
+{% endblock %}

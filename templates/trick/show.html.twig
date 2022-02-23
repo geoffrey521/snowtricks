@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks - {{ trick.name }}{% endblock %}
+
+{% block body %}
+    <!-- Variables -->
+    {% set promotedImage = trick.promotedImage %}
+    {% set backgroundImage = (promotedImage) ? asset('images/trick/' ~ promotedImage.path) : asset('images/snowboard_default.jpg') %}
+    {% set author = trick.author.username %}
+
+    <main class="trickDetails">
+        <!-- Hero -->
+        <div class="hero details-hero container">
+            {% if app.user %}
+            <div class="alter-buttons">
+                <a href="{{ path('trick_edit', {'slug': trick.slug}) }}" class="d-inline-block btn btn-warning btn-sm">
+                    <i class="fas fa-pencil-alt"></i></a>
+                <form method="post" action="{{ path('trick_delete', {'slug': trick.slug}) }}" onsubmit="return confirm('Are you sure you want to delete this trick?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                </form>
+            </div>
+            {% endif %}
+            <div class="hero-image"
+                 style="background: url({{ backgroundImage }}), linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));">
+                <div class="hero-text">
+                    <h1 class="catchPhrase mainTitle">{{ trick.name }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tricks section -->
+        <section id="section_tricks" class="section-tricks">
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col text-center desktop-hidden">
+                        <button id="seeMediasBtn" class="seeMedias btn btn-orange">See medias</button>
+                    </div>
+                </div>
+
+                <div id="trickMedias" class="row section-tricks-medias mx-auto my-auto container">
+                    {% for image in trick.images %}
+                        {% if image.path != promotedImage.path %}
+                            <div class="col-12 col-sm-6 col-lg-2 mt-3">
+                                <div class="card">
+                                    <img src="{{ asset('images/trick/' ~ image.path) }}"
+                                         class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
+                                         data-bs-target="#media-modal-img-{{ loop.index }}">
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% for video in trick.videos %}
+                            <div class="col-12 col-sm-6 col-lg-2 mt-3">
+                                <div class="card" data-bs-toggle="modal"
+                                     data-bs-target="#media-modal-vid-{{ loop.index }}">
+                                    <img src="{{ video.thumbnail }}"
+                                         class="img-fluid" alt="{{ trick.name }} video" >
+                                    <div class="card-play">
+                                        <i class="fas fa-play-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    {% endfor %}
+                </div>
+
+                <!-- modals -->
+                {% for image in trick.images %}
+                    {% if image.path != promotedImage.path %}
+                    <div class="modal fade" id="media-modal-img-{{ loop.index }}" tabindex="-1"
+                         aria-labelledby="modal-title" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <img src="{{ asset('images/trick/' ~ image.path) }}"
+                                     class="img-fluid" alt="{{ image.caption }}" data-bs-toggle="modal"
+                                     data-bs-target="#media-modal-img-{{ loop.index }}">
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                {% for video in trick.videos %}
+                    <div class="modal modalCustom fade" id="media-modal-vid-{{ loop.index }}" tabindex="-1"
+                         aria-labelledby="modal-title" aria-hidden="true">
+                        <div class="modal-dialog modalCustom-dialog">
+                            <div class="modal-content modalCustom-content">
+                                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <iframe width="100%" src="{{ video.url }}"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        data-bs-toggle="modal" data-bs-target="#media-modal-vid-{{ loop.index }}">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- end modals -->
+                <div class="mt-5">
+                    <p>
+                        {{ trick.description }}
+                    </p>
+                </div>
+                <div class="section-tricks-infos d-flex justify-content-center mb-5 mt-5">
+                    <ul class="list-group list-group-horizontal-md text-center">
+                    <li class="list-group-item">By: {{ author }}</li>
+                        <li class="list-group-item">
+                            {{ trick.createdAt|date('Y/m/d') }}
+                        </li>
+                        <li class="list-group-item">Category: Grab</li>
+                        <li class="list-group-item">
+                            <a href="#viewtrick_comments">
+                                {{ trick.comments|length }} comments
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- end trick section -->
+        <hr/>
+        <!-- leave comment section -->
+        <div class="row container m-auto g-3 mt-5 mb-5">
+        {% if app.user %}
+        {{ include('comment/_form.html.twig') }}
+        {% else %}
+                <div>
+                    <p>You need to be <a href="{{ path('app_login') }}">logged</a> or <a href="{{ path('app_register') }}">registered</a> to comment</p>
+                </div>
+        {% endif %}
+        </div>
+        <!-- end leave comment section -->
+        <hr/>
+        <!-- trick comments section -->
+        <section id="viewtrick_comments" class="commentSection mt-5 m-auto container">
+            {% for comment in comments|slice(0, limit) %}
+                <div class="row mt-3 w-100">
+                    <div class="col-2 commentSection-author">
+                        {% if comment.author.avatarUrl %}
+                        <img src="{{ asset('images/user/'~comment.author.avatarUrl) }}" alt="Avatar of {{ comment.author.username }}">
+                        {% endif %}
+                    </div>
+                    <div class="col-10 commentSection-text">
+                        <p class="commentSection-text-date"><span class="fw-bold">{{ comment.author.username }}</span> {{ comment.createdAt|date("Y-m-d")}} at {{ comment.createdAt|date("H:i:s")}}</p>
+                        <p class="commentSection-text-content">
+                            {{ comment.content }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                {% if comments|length > limit %}
+                <div class="col text-center">
+                    <a href="{{ path('trick_show', {'slug' : trick.slug, 'limit' : limit }) }}#section_tricks"
+                       class="loadMore mt-5 btn btn-orange">Load More</a>
+                </div>
+                {% else %}
+                <div class="col text-center mt-5">
+                    <p>No more comments</p>
+                </div>
+                {% endif %}
+            </div>
+
+        </section>
+    </main>
+{% endblock %}

@@ -1,0 +1,26 @@
+{{ form_errors(form) }}
+
+{{ form_start(form) }}
+<hr>
+
+{{ form_row(form.name) }}
+{{ form_row(form.category) }}
+{{ form_row(form.description) }}
+<div class="trickForm-images">
+    {{ form_label(form.photos, null, {
+        'label_attr': {'class': 'w-auto me-2'}
+    }) }}
+    <button id="add_image" class="btn btn-orange"><i class="fas fa-plus-circle"></i></button>
+</div>
+{{ form_widget(form.photos) }}
+
+<div class="trickForm-videos-legend">
+    {{ form_label(form.links, null, {
+        'label_attr': {'class': 'me-2'}
+    }) }}
+    <button id="add_video" class="btn btn-orange"><i class="fas fa-plus-circle"></i></button>
+</div>
+{{ form_widget(form.links) }}
+
+<button class="btn btn-orange mb-3">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

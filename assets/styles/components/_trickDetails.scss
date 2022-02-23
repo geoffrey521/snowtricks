@@ -1,0 +1,75 @@
+.trickDetails {
+  .hero {
+    height: 75vh;
+  }
+  .carousel-control-next,
+  .carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+  }
+  .carousel-control-prev {
+    left: -100px;
+    @include tablet {
+      left: 0;
+    }
+  }
+  .carousel-control-next {
+    right: -100px;
+    @include tablet {
+      right: 0;
+    }
+  }
+  .carousel-item {
+    &:hover {
+      cursor: pointer;
+    }
+    .alter-buttons {
+      position: absolute;
+      bottom: -40px;
+      right: 10px;
+    }
+  }
+  .commentForm {
+    textarea {
+      height: 2rem;
+      word-wrap: break-word;
+      overflow:hidden;
+      resize: none;
+    }
+    @include desktop {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .commentSection {
+    max-width: 800px;
+    &-author {
+      text-align: center;
+      img {
+        max-width: 100%;
+        border-radius: 30px;
+      }
+    }
+    &-text {
+      vertical-align: middle;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      &-content {
+        flex-grow: 1;
+        border: 1px solid #ED7458;
+        padding: 10px 5px;
+        margin-bottom: 0;
+        background-color: rgba(237, 116, 88, 0.46);
+        border-radius: 3px;
+
+      }
+      &-date {
+        padding-left: 5px;
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+}
