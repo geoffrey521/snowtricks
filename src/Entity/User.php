@@ -389,4 +389,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityT
 
         return $this;
     }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
 }

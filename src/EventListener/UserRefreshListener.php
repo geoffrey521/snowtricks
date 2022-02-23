@@ -15,7 +15,7 @@ class UserRefreshListener
     public function postUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();
-        if (!$entity instanceof User) {
+        if ((!$entity instanceof User) || $this->tokenStorage->getToken() === null) {
             return;
         }
 

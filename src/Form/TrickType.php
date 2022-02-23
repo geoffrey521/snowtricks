@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Trick;
-use App\Form\DataTransformer\VideoToLinkTransform;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -16,9 +15,6 @@ use Symfony\Component\Validator\Constraints\Url;
 
 class TrickType extends AbstractType
 {
-    public function __construct(private VideoToLinkTransform $videoTransform)
-    {
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
