@@ -42,7 +42,7 @@ npm install
 4. Build from asset
 
 ````
-yarn watch
+yarn encore dev
 ````
 
 5. Using Database from docker
@@ -52,3 +52,32 @@ Make sure docker is running, run:
 ````
 docker-compose up
 ````
+
+6. Update database
+
+````
+symfony console d:m:m 
+````
+
+7. Load data fixtures
+
+````
+symfony console d:f:l
+````
+8. Start server
+
+````
+symfony serve
+````
+9. Open mailer
+
+````
+symfony open:local:mailer
+````
+
+Local access urls:
+
+Website project : "localhost:8000"
+Mailer : "localhost:48157"
+Adminer : "localhost:8080"
+
