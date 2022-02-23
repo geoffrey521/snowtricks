@@ -1,3 +1,5 @@
+[![SymfonyInsight](https://insight.symfony.com/projects/6a39a599-b148-46c8-9e81-d9e3de522820/big.svg)](https://insight.symfony.com/projects/6a39a599-b148-46c8-9e81-d9e3de522820)
+
 # Initialise project
 
 ## Versions
@@ -75,9 +77,26 @@ symfony serve
 symfony open:local:mailer
 ````
 
-Local access urls:
+````
+symfony serve
+````
+9. Open mailer
 
-Website project : "localhost:8000"
-Mailer : "localhost:48157"
-Adminer : "localhost:8080"
+````
+symfony open:local:mailer
+````
+
+Local access:
+
+* Website project : 
+  * Url: "localhost:8000"
+* Mailer : 
+  * Url: "localhost:48157"
+* Adminer : 
+  * Url "localhost:8080"
+     *auth:
+        * server: "database"
+        * user: "symfony"
+        * password: "ChangeMe"
+        * database: "app"
 
