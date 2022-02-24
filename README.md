@@ -61,11 +61,18 @@ docker-compose up
 symfony console d:m:m 
 ````
 
-7. Load data fixtures
+7. Load datas OR fixtures
+
+````
+symfony run psql < dump.sql      
+````
+or
 
 ````
 symfony console d:f:l
 ````
+
+
 8. Start server
 
 ````
