@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Factory\CategoryFactory;
 use App\Factory\CommentFactory;
 use App\Factory\ImageFactory;
@@ -15,8 +16,16 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        $categoryNames = ['Grabs', 'Rail tricks', 'One foot tricks', 'Rotations'];
+
+        foreach ($categoryNames as $categoryName) {
+            $category = new Category();
+            $category->setName($categoryName);
+            $manager->persist($category);
+        }
+
         // create 5 categories
-        CategoryFactory::createMany(5);
+        //     CategoryFactory::createMany(5);
 
         // create 10 basic users
         UserFactory::createMany(10);

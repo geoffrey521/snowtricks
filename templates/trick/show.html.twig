@@ -107,7 +107,7 @@
                         <li class="list-group-item">
                             {{ trick.createdAt|date('Y/m/d') }}
                         </li>
-                        <li class="list-group-item">Category: Grab</li>
+                        <li class="list-group-item">Category: {{ trick.category }}</li>
                         <li class="list-group-item">
                             <a href="#viewtrick_comments">
                                 {{ trick.comments|length }} comments
