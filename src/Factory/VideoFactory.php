@@ -4,27 +4,27 @@ namespace App\Factory;
 
 use App\Entity\Video;
 use App\Repository\VideoRepository;
-use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
+use Zenstruck\Foundry\RepositoryProxy;
 
 /**
  * @extends ModelFactory<Video>
  *
- * @method static Video|Proxy createOne(array $attributes = [])
- * @method static Video[]|Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static Video|Proxy find(object|array|mixed $criteria)
- * @method static Video|Proxy findOrCreate(array $attributes)
- * @method static Video|Proxy first(string $sortedField = 'id')
- * @method static Video|Proxy last(string $sortedField = 'id')
- * @method static Video|Proxy random(array $attributes = [])
- * @method static Video|Proxy randomOrCreate(array $attributes = [])
- * @method static Video[]|Proxy[] all()
- * @method static Video[]|Proxy[] findBy(array $attributes)
- * @method static Video[]|Proxy[] randomSet(int $number, array $attributes = [])
- * @method static Video[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static VideoRepository|RepositoryProxy repository()
- * @method Video|Proxy create(array|callable $attributes = [])
+ * @method static      Video|Proxy createOne(array $attributes = [])
+ * @method static      Video[]|Proxy[] createMany(int $number, array|callable $attributes = [])
+ * @method static      Video|Proxy find(array|mixed|object $criteria)
+ * @method static      Video|Proxy findOrCreate(array $attributes)
+ * @method static      Video|Proxy first(string $sortedField = 'id')
+ * @method static      Video|Proxy last(string $sortedField = 'id')
+ * @method static      Video|Proxy random(array $attributes = [])
+ * @method static      Video|Proxy randomOrCreate(array $attributes = [])
+ * @method static      Video[]|Proxy[] all()
+ * @method static      Video[]|Proxy[] findBy(array $attributes)
+ * @method static      Video[]|Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static      Video[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
+ * @method static      VideoRepository|RepositoryProxy repository()
+ * @method Proxy|Video create(array|callable $attributes = [])
  */
 final class VideoFactory extends ModelFactory
 {
@@ -36,7 +36,7 @@ final class VideoFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'url' => self::faker()->randomElement(['https://www.youtube.com/embed/JjOyl6zS-eU', 'https://www.youtube.com/embed/JjOyl6zS-eU', 'https://www.youtube.com/embed/JjOyl6zS-eU']),
+            'url' => self::faker()->randomElement(['https://www.youtube.com/watch?v=LWUfrwCofuA', 'https://www.youtube.com/watch?v=_hxLS2ErMiY', 'https://www.youtube.com/watch?v=duCwYpZ_--4']),
         ];
     }
 

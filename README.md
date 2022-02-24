@@ -77,13 +77,11 @@ symfony serve
 symfony open:local:mailer
 ````
 
-````
-symfony serve
-````
-9. Open mailer
+
+Local access:
 
 ````
-symfony open:local:mailer
+symfony serve
 ````
 
 Local access:
